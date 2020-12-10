@@ -1,2 +1,6 @@
 import './scss/main.scss';
-console.log('hi!');
+import Table from './table.js';
+
+const tb = new Table();
+
+tb.init();
