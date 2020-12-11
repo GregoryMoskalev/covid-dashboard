@@ -1,6 +1,6 @@
 import getCovidCounty from "./dataFetch.js";
 
-const dataListCovid = async function () {
+export const dataListCovid = async function () {
   const item = [];
   //  newArr.length = 0;
   const list = await getCovidCounty();
@@ -27,5 +27,6 @@ const dataListCovid = async function () {
   return item;
 };
 
-
-export default dataListCovid;
+export function objSort(field) {
+  return ((a,b) => a[field] > b[field] ? 1 : -1);
+}
