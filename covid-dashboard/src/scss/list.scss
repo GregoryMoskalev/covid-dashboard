@@ -28,13 +28,26 @@ $colorLine: #383838;
     height: 80%;
     width: 90%;
     margin-top: 10px;
-    overflow-x: auto;
-    // background-color: slategrey;
-    border: 1px solid $colorLine;
+    overflow-y: hidden;
     position: relative;
+    transition: .3s;
+
+    &:hover{
+      overflow-y: auto;
+     	overflow-x: hidden;
+    }
+    
+    &::-webkit-scrollbar {
+    	width: 7px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+   	border-radius: 2px;
+   	background-color: rgba(0,0,0,0.5);
+ 	  box-shadow: 0 0 1px rgba(255,255,255,0.5);
+    }
   }
 }
-
 
 .country {
   padding-left: 10px;
@@ -63,4 +76,8 @@ $colorLine: #383838;
  &__title {
    margin-left: 6px;
  }
+}
+
+.hide {
+  display: none;
 }

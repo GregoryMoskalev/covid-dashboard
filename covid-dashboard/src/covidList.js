@@ -2,7 +2,7 @@ import getCovidCounty from "./dataFetch.js";
 
 export const dataListCovid = async function () {
   const item = [];
-  //  newArr.length = 0;
+  item.length = 0;
   const list = await getCovidCounty();
   list.forEach((data, ind) => {
     const populationOnThousand = data.population / 100000;
@@ -23,7 +23,6 @@ export const dataListCovid = async function () {
       newRecoverdnOnThousand: Math.ceil(data.todayRecovered / populationOnThousand), // last day заболевших на 100к
     };
   });
-  // console.log('arr', item);
   return item;
 };
 

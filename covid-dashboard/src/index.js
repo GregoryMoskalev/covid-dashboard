@@ -1,7 +1,12 @@
 import './scss/main.scss';
-import dataListCovid from "./covidList.js";
+import {renderUI, defineList, renderListCountries} from "./renderUI.js";
+import liveSearch from "./search.js";
 
-const vv = dataListCovid();
-console.log(vv)
+function init() {
+  renderUI();
+  defineList();
+  renderListCountries();
+  liveSearch();
+}
 
-// console.log(dataListCovid())
+init();
