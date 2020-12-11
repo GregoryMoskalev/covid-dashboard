@@ -1,0 +1,20 @@
+.table {
+  margin-top: 10px;
+  &__total {
+    display: none;
+    height: 400px;
+    width: 250px;
+    overflow-y: scroll;
+    &:target {
+      display: block;
+    }
+  }
+}
+
+.control {
+  &__item {
+    text-decoration: none;
+    margin: 5px;
+    color: inherit;
+  }
+}
