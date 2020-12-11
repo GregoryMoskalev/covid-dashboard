@@ -1,2 +1,7 @@
 import './scss/main.scss';
-console.log('hi!');
+import dataListCovid from "./covidList.js";
+
+const vv = dataListCovid();
+console.log(vv)
+
+// console.log(dataListCovid())
