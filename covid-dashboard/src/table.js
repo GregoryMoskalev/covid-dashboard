@@ -3,57 +3,59 @@ import fetchData from './fetchData.js';
 
 export default class table {
   constructor() {
-    [ this.app ] = document.body.getElementsByClassName('app');
+    [ this.tableParent ] = document.body.getElementsByClassName('table-wrapper');
     this.fetchData = fetchData;
-    this.totalTable = { cases: null, deaths: null, recovered: null };
-    this.totalTableHeader = {};
   }
 
-  renderControl() {
-    this.radioWrapper = document.createElement('div');
-    this.radioWrapper.classList.add('control');
-    this.app.appendChild(this.radioWrapper);
-    Object.keys(this.totalTable).forEach((bookmark) => {
-      const tableControl = document.createElement('a');
-      tableControl.classList.add('control__item');
-      tableControl.href = `#${bookmark}`;
-      tableControl.innerHTML = bookmark;
-      this.radioWrapper.appendChild(tableControl);
-    });
-  }
+  // renderControl() {
+  //   this.radioWrapper = document.createElement('div');
+  //   this.radioWrapper.classList.add('control');
+  //   this.tableParent.appendChild(this.radioWrapper);
+  //   Object.keys(this.totalTable).forEach((bookmark) => {
+  //     const tableControl = document.createElement('a');
+  //     tableControl.classList.add('control__item');
+  //     tableControl.href = `#${bookmark}`;
+  //     tableControl.innerHTML = bookmark;
+  //     this.radioWrapper.appendChild(tableControl);
+  //   });
+  // }
 
   renderTable() {
-    this.table = document.createElement('div');
-    this.table.classList.add('table');
-    this.app.appendChild(this.table);
+    this.table = document.createElement('table');
+    this.table.classList.add('table__all-time');
+    this.tableParent.appendChild(this.table);
 
-    // всего
-    Object.keys(this.totalTable).forEach((bookmark) => {
-      this.totalTable[bookmark] = document.createElement('div');
-      this.totalTable[bookmark].classList.add(`table__total__${bookmark}`, 'table__total');
-      this.totalTable[bookmark].id = bookmark;
-      this.table.appendChild(this.totalTable[bookmark]);
-      this.totalTableHeader[bookmark] = document.createElement('h3');
-      this.totalTableHeader[bookmark].classList.add(`table__total__${bookmark}__header`);
-      this.totalTableHeader[bookmark].innerHTML = `Global ${bookmark}: ${this.sumData(bookmark)}`;
-      this.totalTable[bookmark].appendChild(this.totalTableHeader[bookmark]);
-      this.data.forEach((item) => {
-        const country = document.createElement('p');
-        country.innerHTML = `${item.country} <br> ${bookmark}: ${item[bookmark]}`;
-        this.totalTable[bookmark].appendChild(country);
-      });
-      console.log(this.totalTable);
+    this.tableRow = [];
+    for (let row = 0; row < 3; row += 1) {
+      this.tableRow[row] = document.createElement('tr');
+      this.tableRow[row].classList.add('table__row');
+      this.table.appendChild(this.tableRow[row]);
+    }
+
+    this.tableHeader = { '': null, cases: null, deaths: null, recovered: null };
+    Object.keys(this.tableHeader).forEach((header) => {
+      this.tableHeader[header] = document.createElement('th');
+      this.tableHeader[header].classList.add('table__header');
+      this.tableHeader[header].innerHTML = header;
+      this.tableRow[0].appendChild(this.tableHeader[header]);
     });
-    // (() => {
-    //   this.todayTable = document.createElement('div');
-    //   this.todayTable.classList.add('table__today');
-    //   this.table.appendChild(this.totalTable);
-    //   this.data.forEach((item) => {
-    //     const country = document.createElement('p');
-    //     country.innerHTML = `${item.country} <br> cases: ${item.todayCases} deaths: ${item.todayDeaths} recovered: ${item.todayRecovered}`;
-    //     this.todayTable.appendChild(country);
-    //   });
-    // })();
+
+    this.totalCasesRow = { total: null, cases: null, deaths: null, recovered: null };
+    Object.keys(this.totalCasesRow).forEach((tCell) => {
+      this.totalCasesRow[tCell] = document.createElement('td');
+      this.totalCasesRow[tCell].classList.add('table__cell');
+      this.totalCasesRow[tCell].innerHTML = tCell === 'total' ? 'total' : this.sumData(tCell);
+      this.tableRow[1].appendChild(this.totalCasesRow[tCell]);
+    });
+
+    this.per100KCasesRow = { '100k': null, cases: null, deaths: null, recovered: null };
+    Object.keys(this.per100KCasesRow).forEach((tCell) => {
+      this.per100KCasesRow[tCell] = document.createElement('td');
+      this.per100KCasesRow[tCell].classList.add('table__cell');
+      this.per100KCasesRow[tCell].innerHTML =
+        tCell === '100k' ? 'per 100000 people' : (this.totalCases / this.mod).toFixed(2);
+      this.tableRow[2].appendChild(this.per100KCasesRow[tCell]);
+    });
   }
 
   sumData(param) {
@@ -70,7 +72,7 @@ export default class table {
     this.todayDeaths = this.sumData('todayDeaths');
     this.todayRecovered = this.sumData('todayRecovered');
     this.mod = this.sumData('population') / 100000;
-    this.renderControl();
+    // this.renderControl();
     this.renderTable();
     // console.table(this.data);
     // общее количество случаев заболевания
