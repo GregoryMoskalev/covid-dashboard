@@ -3,4 +3,4 @@ import Table from './table.js';
 
 const tb = new Table();
 
-tb.init('');
+tb.init();

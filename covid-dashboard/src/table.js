@@ -80,15 +80,23 @@ export default class table {
       this.todayCases = this.sumData('todayCases');
       this.todayDeaths = this.sumData('todayDeaths');
       this.todayRecovered = this.sumData('todayRecovered');
+      this.mod = this.sumData('population') / 100000;
+    } else {
+      this.totalCases = this.data.cases;
+      this.totalDeaths = this.data.deaths;
+      this.totalRecovered = this.data.recovered;
+      this.todayCases = this.data.todayCases;
+      this.todayDeaths = this.data.todayDeaths;
+      this.todayRecovered = this.data.todayRecovered;
+      this.mod = this.data.population / 100000;
     }
 
-    this.mod = this.sumData('population') / 100000;
     this.cells = [
       [ this.totalCases, this.totalDeaths, this.totalRecovered ],
       [ this.todayCases, this.todayDeaths, this.todayRecovered ],
     ];
     // this.renderControl();
-    this.renderTable(this.totalCases, this.totalDeaths, this.totalRecovered);
+    this.renderTable();
     // общее количество случаев заболевания
     // console.log('cases', this.totalCases);
     // // общее количество летальных исходов
