@@ -5,56 +5,65 @@ export default class table {
   constructor() {
     [ this.tableParent ] = document.body.getElementsByClassName('table-wrapper');
     this.fetchData = fetchData;
+    this.selectorTime = 0;
+    this.selectorCalc = 0;
+
+    this.onChangeCalc = (evt) => {
+      this.selectorCalc = evt.target.value;
+      this.fillTableCells();
+    };
+
+    this.onChangeTime = (evt) => {
+      this.selectorTime = evt.target.value;
+      this.fillTableCells();
+    };
   }
 
-  // renderControl() {
-  //   this.radioWrapper = document.createElement('div');
-  //   this.radioWrapper.classList.add('control');
-  //   this.tableParent.appendChild(this.radioWrapper);
-  //   Object.keys(this.totalTable).forEach((bookmark) => {
-  //     const tableControl = document.createElement('a');
-  //     tableControl.classList.add('control__item');
-  //     tableControl.href = `#${bookmark}`;
-  //     tableControl.innerHTML = bookmark;
-  //     this.radioWrapper.appendChild(tableControl);
-  //   });
-  // }
+  renderControl(options, callback) {
+    if (!this.select) {
+      this.select = [];
+    }
+    this.select.push(document.createElement('select'));
+    this.select[this.select.length - 1].classList.add('selector');
+
+    options.forEach((option, index) => {
+      const op = document.createElement('option');
+      op.classList.add('option');
+      op.innerHTML = option;
+      op.value = index;
+      this.select[this.select.length - 1].appendChild(op);
+    });
+
+    this.select[this.select.length - 1].addEventListener('change', (evt) => callback(evt));
+    return this.select[this.select.length - 1];
+  }
 
   renderTable() {
-    this.table = document.createElement('table');
-    this.table.classList.add('table__all-time');
+    this.tableCell = [];
+
+    this.table = document.createElement('div');
+    this.table.classList.add('table');
     this.tableParent.appendChild(this.table);
 
-    this.tableRow = [];
-    for (let row = 0; row < 3; row += 1) {
-      this.tableRow[row] = document.createElement('tr');
-      this.tableRow[row].classList.add('table__row');
-      this.table.appendChild(this.tableRow[row]);
-    }
+    this.table.appendChild(this.renderControl([ 'Total', 'Per 100000 people' ], this.onChangeCalc));
+    this.table.appendChild(this.renderControl([ 'All Time', 'Last day' ], this.onChangeTime));
 
-    this.tableHeader = { '': null, cases: null, deaths: null, recovered: null };
-    Object.keys(this.tableHeader).forEach((header) => {
-      this.tableHeader[header] = document.createElement('th');
-      this.tableHeader[header].classList.add('table__header');
-      this.tableHeader[header].innerHTML = header;
-      this.tableRow[0].appendChild(this.tableHeader[header]);
+    this.renderTableCells();
+    this.fillTableCells();
+  }
+
+  renderTableCells() {
+    this.cells[this.selectorTime].forEach((cell, index) => {
+      this.tableCell[index] = document.createElement('div');
+      this.tableCell[index].classList.add('table__cell');
+      this.table.appendChild(this.tableCell[index]);
     });
+  }
 
-    this.totalCasesRow = { total: null, cases: null, deaths: null, recovered: null };
-    Object.keys(this.totalCasesRow).forEach((tCell) => {
-      this.totalCasesRow[tCell] = document.createElement('td');
-      this.totalCasesRow[tCell].classList.add('table__cell');
-      this.totalCasesRow[tCell].innerHTML = tCell === 'total' ? 'total' : this.sumData(tCell);
-      this.tableRow[1].appendChild(this.totalCasesRow[tCell]);
-    });
-
-    this.per100KCasesRow = { '100k': null, cases: null, deaths: null, recovered: null };
-    Object.keys(this.per100KCasesRow).forEach((tCell) => {
-      this.per100KCasesRow[tCell] = document.createElement('td');
-      this.per100KCasesRow[tCell].classList.add('table__cell');
-      this.per100KCasesRow[tCell].innerHTML =
-        tCell === '100k' ? 'per 100000 people' : (this.totalCases / this.mod).toFixed(2);
-      this.tableRow[2].appendChild(this.per100KCasesRow[tCell]);
+  fillTableCells() {
+    this.cells[this.selectorTime].forEach((cell, index) => {
+      this.tableCell[index].innerHTML =
+        Number(this.selectorCalc) === 0 ? cell : (cell / this.mod).toFixed(2);
     });
   }
 
@@ -62,19 +71,24 @@ export default class table {
     return Object.values(this.data).reduce((sum, country) => sum + country[param], 0);
   }
 
-  async init() {
-    this.data = await this.fetchData('');
-    this.totalCases = this.sumData('cases');
-    this.totalDeaths = this.sumData('deaths');
-    this.totalRecovered = this.sumData('recovered');
+  async init(country) {
+    this.data = await this.fetchData(country);
+    if (!country) {
+      this.totalCases = this.sumData('cases');
+      this.totalDeaths = this.sumData('deaths');
+      this.totalRecovered = this.sumData('recovered');
+      this.todayCases = this.sumData('todayCases');
+      this.todayDeaths = this.sumData('todayDeaths');
+      this.todayRecovered = this.sumData('todayRecovered');
+    }
 
-    this.todayCases = this.sumData('todayCases');
-    this.todayDeaths = this.sumData('todayDeaths');
-    this.todayRecovered = this.sumData('todayRecovered');
     this.mod = this.sumData('population') / 100000;
+    this.cells = [
+      [ this.totalCases, this.totalDeaths, this.totalRecovered ],
+      [ this.todayCases, this.todayDeaths, this.todayRecovered ],
+    ];
     // this.renderControl();
-    this.renderTable();
-    // console.table(this.data);
+    this.renderTable(this.totalCases, this.totalDeaths, this.totalRecovered);
     // общее количество случаев заболевания
     // console.log('cases', this.totalCases);
     // // общее количество летальных исходов
