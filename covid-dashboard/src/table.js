@@ -19,6 +19,33 @@ export default class table {
     };
   }
 
+  renderTable() {
+    this.tableCell = [];
+
+    this.table = document.createElement('div');
+    this.table.classList.add('table');
+    this.tableParent.appendChild(this.table);
+
+    this.renderTableHeading();
+
+    this.table.appendChild(this.renderControl([ 'Total', 'Per 100000 people' ], this.onChangeCalc));
+    this.table.appendChild(this.renderControl([ 'All Time', 'Last day' ], this.onChangeTime));
+
+    this.tableRow = document.createElement('div');
+    this.tableRow.classList.add('table__row');
+    this.table.appendChild(this.tableRow);
+
+    this.renderTableCells();
+    this.fillTableCells();
+  }
+
+  renderTableHeading() {
+    this.tableHeading = document.createElement('h3');
+    this.tableHeading.classList.add('table__heading');
+    this.tableHeading.innerHTML = !this.country ? 'global' : this.country;
+    this.table.appendChild(this.tableHeading);
+  }
+
   renderControl(options, callback) {
     if (!this.select) {
       this.select = [];
@@ -36,24 +63,6 @@ export default class table {
 
     this.select[this.select.length - 1].addEventListener('change', (evt) => callback(evt));
     return this.select[this.select.length - 1];
-  }
-
-  renderTable() {
-    this.tableCell = [];
-
-    this.table = document.createElement('div');
-    this.table.classList.add('table');
-    this.tableParent.appendChild(this.table);
-
-    this.table.appendChild(this.renderControl([ 'Total', 'Per 100000 people' ], this.onChangeCalc));
-    this.table.appendChild(this.renderControl([ 'All Time', 'Last day' ], this.onChangeTime));
-
-    this.tableRow = document.createElement('div');
-    this.tableRow.classList.add('table__row');
-    this.table.appendChild(this.tableRow);
-
-    this.renderTableCells();
-    this.fillTableCells();
   }
 
   renderTableCells() {
@@ -77,6 +86,7 @@ export default class table {
   }
 
   async init(country) {
+    this.country = country;
     this.data = await this.fetchData(country);
     if (!country) {
       this.totalCases = this.sumData('cases');

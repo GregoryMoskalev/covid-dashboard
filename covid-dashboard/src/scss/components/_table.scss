@@ -1,4 +1,11 @@
 .table {
+  &__heading {
+    font-weight: 300;
+    text-transform: capitalize;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+  }
+
   &-wrapper {
     margin: 5rem;
     width: fit-content;
