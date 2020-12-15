@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import fetchData from './fetchData.js';
 
-export default class table {
+export default class Table {
   constructor() {
     [ this.tableParent ] = document.body.getElementsByClassName('table-wrapper');
     this.fetchData = fetchData;
@@ -97,7 +97,7 @@ export default class table {
     this.renderTable();
   }
 
-  setRegion(region){
+  setRegion(region) {
     this.country = region;
     if (!region) {
       this.totalCases = this.sumData('cases');
@@ -108,7 +108,7 @@ export default class table {
       this.todayRecovered = this.sumData('todayRecovered');
       this.mod = this.sumData('population') / 100000;
     } else {
-      const data = this.data.find(({country}) => country === region);
+      const data = this.data.find(({ country }) => country === region);
       this.totalCases = data.cases;
       this.totalDeaths = data.deaths;
       this.totalRecovered = data.recovered;

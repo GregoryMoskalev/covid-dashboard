@@ -1,5 +1,5 @@
 import './scss/main.scss';
-import Table from './table.js';
+import Table from './Table.js';
 
 const tb = new Table();
 
