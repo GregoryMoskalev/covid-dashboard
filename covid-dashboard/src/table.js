@@ -9,6 +9,7 @@ export default class Table {
     this.selectorTime = 0;
     this.selectorCalc = 0;
     this.rate = 100000;
+    this.cellsHeaders = [ 'Cases', 'Deaths', 'Recovered' ];
 
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
@@ -43,10 +44,12 @@ export default class Table {
   }
 
   renderTableHeading() {
-    this.tableHeading = document.createElement('h3');
-    this.tableHeading.classList.add('table__heading');
+    if (!this.tableHeading) {
+      this.tableHeading = document.createElement('h3');
+      this.tableHeading.classList.add('table__heading');
+      this.table.appendChild(this.tableHeading);
+    }
     this.tableHeading.innerHTML = !this.country ? 'global' : this.country;
-    this.table.appendChild(this.tableHeading);
   }
 
   renderControl(options, callback) {
@@ -97,19 +100,13 @@ export default class Table {
     return Object.values(this.data).reduce((sum, country) => sum + country[param], 0);
   }
 
-  async init(region) {
+  async init() {
     this.data = await this.fetchData();
-    this.setRegionData(region);
-
-    this.cells = [
-      [ this.totalCases, this.totalDeaths, this.totalRecovered ],
-      [ this.todayCases, this.todayDeaths, this.todayRecovered ],
-    ];
-    this.cellsHeaders = [ 'Cases', 'Deaths', 'Recovered' ];
+    this.setRegionData();
     this.renderTable();
   }
 
-  setRegionData(region) {
+  setRegionData(region = null) {
     this.country = region;
     if (!region) {
       this.totalCases = this.sumData('cases');
@@ -128,6 +125,16 @@ export default class Table {
       this.todayDeaths = data.todayDeaths;
       this.todayRecovered = data.todayRecovered;
       this.mod = data.population / this.rate;
+    }
+
+    this.cells = [
+      [ this.totalCases, this.totalDeaths, this.totalRecovered ],
+      [ this.todayCases, this.todayDeaths, this.todayRecovered ],
+    ];
+
+    if (this.table) {
+      this.renderTableHeading();
+      this.renderTableCellsData();
     }
   }
 }
