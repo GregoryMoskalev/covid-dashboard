@@ -11,6 +11,15 @@ export default class Table {
     this.rate = 100000;
     this.cellsHeaders = [ 'Cases', 'Deaths', 'Recovered' ];
 
+    this.newHtmlElement = (tag, className, iHtml = null) => {
+      const element = document.createElement(tag);
+      element.classList.add(className);
+      if (iHtml) {
+        element.innerHTML = iHtml;
+      }
+      return element;
+    };
+
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
       this.renderTableCellsData();
@@ -25,8 +34,7 @@ export default class Table {
   renderTable() {
     this.tableCell = [];
 
-    this.table = document.createElement('div');
-    this.table.classList.add('table');
+    this.table = this.newHtmlElement('div', 'table');
     this.tableParent.appendChild(this.table);
 
     this.renderTableHeading();
@@ -34,8 +42,7 @@ export default class Table {
     this.table.appendChild(this.renderControl([ 'Total', 'Per 100000 people' ], this.onChangeCalc));
     this.table.appendChild(this.renderControl([ 'All Time', 'Last day' ], this.onChangeTime));
 
-    this.tableRow = document.createElement('div');
-    this.tableRow.classList.add('table__row');
+    this.tableRow = this.newHtmlElement('div', 'table__row');
     this.table.appendChild(this.tableRow);
 
     this.renderTableCells();
@@ -45,8 +52,7 @@ export default class Table {
 
   renderTableHeading() {
     if (!this.tableHeading) {
-      this.tableHeading = document.createElement('h3');
-      this.tableHeading.classList.add('table__heading');
+      this.tableHeading = this.newHtmlElement('h3', 'table__heading');
       this.table.appendChild(this.tableHeading);
     }
     this.tableHeading.innerHTML = !this.country ? 'global' : this.country;
@@ -56,13 +62,10 @@ export default class Table {
     if (!this.select) {
       this.select = [];
     }
-    this.select.push(document.createElement('select'));
-    this.select[this.select.length - 1].classList.add('selector');
+    this.select.push(this.newHtmlElement('select', 'selector'));
 
     options.forEach((option, index) => {
-      const op = document.createElement('option');
-      op.classList.add('option');
-      op.innerHTML = option;
+      const op = this.newHtmlElement('option', 'option', option);
       op.value = index;
       this.select[this.select.length - 1].appendChild(op);
     });
@@ -73,18 +76,16 @@ export default class Table {
 
   renderTableCells() {
     this.cells[this.selectorTime].forEach((_, index) => {
-      this.tableCell[index] = document.createElement('div');
-      this.tableCell[index].classList.add('table__cell');
+      this.tableCell[index] = this.newHtmlElement('div', 'table__cell');
       this.tableRow.appendChild(this.tableCell[index]);
     });
   }
 
   fillTableCells() {
     this.cells[this.selectorTime].forEach((_, index) => {
-      this.cellsData[index] = document.createElement('span');
-      this.cellsData[index].classList.add('table__data');
-      this.tableCell[index].innerHTML = `
+      const iHtml = `
       <h3 class="cell-heading">${this.cellsHeaders[index]}</h3>`;
+      this.cellsData[index] = this.newHtmlElement('span', 'table__data', iHtml);
       this.tableCell[index].appendChild(this.cellsData[index]);
     });
   }
