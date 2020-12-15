@@ -77,7 +77,7 @@ export default class Table {
     this.cells[this.selectorTime].forEach((cell, index) => {
       const data = Number(this.selectorCalc) === 0 ? cell : (cell / this.mod).toFixed(2);
       this.tableCell[index].innerHTML = `
-      <span class="cell-heading">${this.cellsHeaders[index]}</span><br> ${data}`;
+      <h3 class="cell-heading">${this.cellsHeaders[index]}</h3> ${data}`;
     });
   }
 
