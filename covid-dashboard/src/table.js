@@ -8,6 +8,7 @@ export default class Table {
     this.fetchData = fetchData;
     this.selectorTime = 0;
     this.selectorCalc = 0;
+    this.rate = 100000;
 
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
@@ -117,7 +118,7 @@ export default class Table {
       this.todayCases = this.sumData('todayCases');
       this.todayDeaths = this.sumData('todayDeaths');
       this.todayRecovered = this.sumData('todayRecovered');
-      this.mod = this.sumData('population') / 100000;
+      this.mod = this.sumData('population') / this.rate;
     } else {
       const data = this.data.find(({ country }) => country === region);
       this.totalCases = data.cases;
@@ -126,7 +127,7 @@ export default class Table {
       this.todayCases = data.todayCases;
       this.todayDeaths = data.todayDeaths;
       this.todayRecovered = data.todayRecovered;
-      this.mod = data.population / 100000;
+      this.mod = data.population / this.rate;
     }
   }
 }
