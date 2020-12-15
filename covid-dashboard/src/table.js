@@ -4,18 +4,19 @@ import fetchData from './fetchData.js';
 export default class Table {
   constructor() {
     [ this.tableParent ] = document.body.getElementsByClassName('table-wrapper');
+    this.cellsData = [];
     this.fetchData = fetchData;
     this.selectorTime = 0;
     this.selectorCalc = 0;
 
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
-      this.fillTableCells();
+      this.renderTableCellsData();
     };
 
     this.onChangeTime = (evt) => {
       this.selectorTime = evt.target.value;
-      this.fillTableCells();
+      this.renderTableCellsData();
     };
   }
 
@@ -37,6 +38,7 @@ export default class Table {
 
     this.renderTableCells();
     this.fillTableCells();
+    this.renderTableCellsData();
   }
 
   renderTableHeading() {
@@ -66,7 +68,7 @@ export default class Table {
   }
 
   renderTableCells() {
-    this.cells[this.selectorTime].forEach((cell, index) => {
+    this.cells[this.selectorTime].forEach((_, index) => {
       this.tableCell[index] = document.createElement('div');
       this.tableCell[index].classList.add('table__cell');
       this.tableRow.appendChild(this.tableCell[index]);
@@ -74,10 +76,19 @@ export default class Table {
   }
 
   fillTableCells() {
-    this.cells[this.selectorTime].forEach((cell, index) => {
-      const data = Number(this.selectorCalc) === 0 ? cell : (cell / this.mod).toFixed(2);
+    this.cells[this.selectorTime].forEach((_, index) => {
+      this.cellsData[index] = document.createElement('span');
+      this.cellsData[index].classList.add('table__data');
       this.tableCell[index].innerHTML = `
-      <h3 class="cell-heading">${this.cellsHeaders[index]}</h3> ${data}`;
+      <h3 class="cell-heading">${this.cellsHeaders[index]}</h3>`;
+      this.tableCell[index].appendChild(this.cellsData[index]);
+    });
+  }
+
+  renderTableCellsData() {
+    this.cells[this.selectorTime].forEach((cell, index) => {
+      this.cellsData[index].innerHTML =
+        Number(this.selectorCalc) === 0 ? cell : (cell / this.mod).toFixed(2);
     });
   }
 
