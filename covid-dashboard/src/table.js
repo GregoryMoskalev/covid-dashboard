@@ -99,7 +99,7 @@ export default class Table {
 
   async init(region) {
     this.data = await this.fetchData();
-    this.setRegion(region);
+    this.setRegionData(region);
 
     this.cells = [
       [ this.totalCases, this.totalDeaths, this.totalRecovered ],
@@ -109,7 +109,7 @@ export default class Table {
     this.renderTable();
   }
 
-  setRegion(region) {
+  setRegionData(region) {
     this.country = region;
     if (!region) {
       this.totalCases = this.sumData('cases');
