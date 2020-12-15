@@ -85,10 +85,21 @@ export default class table {
     return Object.values(this.data).reduce((sum, country) => sum + country[param], 0);
   }
 
-  async init(country) {
-    this.country = country;
-    this.data = await this.fetchData(country);
-    if (!country) {
+  async init(region) {
+    this.data = await this.fetchData();
+    this.setRegion(region);
+
+    this.cells = [
+      [ this.totalCases, this.totalDeaths, this.totalRecovered ],
+      [ this.todayCases, this.todayDeaths, this.todayRecovered ],
+    ];
+    this.cellsHeaders = [ 'Cases', 'Deaths', 'Recovered' ];
+    this.renderTable();
+  }
+
+  setRegion(region){
+    this.country = region;
+    if (!region) {
       this.totalCases = this.sumData('cases');
       this.totalDeaths = this.sumData('deaths');
       this.totalRecovered = this.sumData('recovered');
@@ -97,20 +108,14 @@ export default class table {
       this.todayRecovered = this.sumData('todayRecovered');
       this.mod = this.sumData('population') / 100000;
     } else {
-      this.totalCases = this.data.cases;
-      this.totalDeaths = this.data.deaths;
-      this.totalRecovered = this.data.recovered;
-      this.todayCases = this.data.todayCases;
-      this.todayDeaths = this.data.todayDeaths;
-      this.todayRecovered = this.data.todayRecovered;
-      this.mod = this.data.population / 100000;
+      const data = this.data.find(({country}) => country === region);
+      this.totalCases = data.cases;
+      this.totalDeaths = data.deaths;
+      this.totalRecovered = data.recovered;
+      this.todayCases = data.todayCases;
+      this.todayDeaths = data.todayDeaths;
+      this.todayRecovered = data.todayRecovered;
+      this.mod = data.population / 100000;
     }
-
-    this.cells = [
-      [ this.totalCases, this.totalDeaths, this.totalRecovered ],
-      [ this.todayCases, this.todayDeaths, this.todayRecovered ],
-    ];
-    this.cellsHeaders = [ 'Cases', 'Deaths', 'Recovered' ];
-    this.renderTable();
   }
 }
