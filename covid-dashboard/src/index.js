@@ -1,2 +1,4 @@
 import './scss/main.scss';
-console.log('hi!');
+import { mapModule } from './mapModule.js';
+
+mapModule('last day cases');
