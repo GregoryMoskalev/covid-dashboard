@@ -15,3 +15,11 @@ body {
   height: 800px;
   width: 1200px;
 }
+
+.legend {
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  text-shadow: black 1px 1px 2px;
+}

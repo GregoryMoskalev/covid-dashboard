@@ -2,17 +2,37 @@ import L from 'leaflet';
 import { getData } from './getData.js';
 
 
-export async function mapModule(parameter = 'total cases') {
+export async function mapModule(parameter = 'Total cases') {
   const url = `https://corona.lmao.ninja/v3/covid-19/countries`;
   const countryData = await getData(url);
 
   function choseMap (condition, country) {
     switch(condition) {
-      case 'last day cases': return [countryData[country].todayCases * 10, countryData[country].todayCases];
-      case 'on 100 000 population': return [countryData[country].casesPerOneMillion, countryData[country].casesPerOneMillion];
+      case 'Last day cases': return [
+        countryData[country].todayCases * 10, 
+        countryData[country].todayCases
+      ];
+      case 'On 100 000 population': return [
+        countryData[country].casesPerOneMillion, 
+        countryData[country].casesPerOneMillion / 10
+      ];
       // case 'total cases': return [countryData[country].cases / 20, countryData[country].cases];
-      default: return [countryData[country].cases / 20, countryData[country].cases];
+      default: return [
+        countryData[country].cases / 20, 
+        countryData[country].cases
+      ];
     }
+  }
+
+  let legendSize;
+  if (parameter === 'Last day cases') {
+    legendSize = 'For every 10 meters of radius there is 1 case.';
+  }
+  if (parameter === 'On 100 000 population') {
+    legendSize = 'For every 10 meters of radius there is 1 case.';
+  }
+  if (parameter === 'Total cases') {
+    legendSize = 'For every 1 meter of radius there is 20 case.';
   }
 
   const mapOptions = {
@@ -52,7 +72,23 @@ export async function mapModule(parameter = 'total cases') {
         map.removeLayer(popup1);
       });
     });
-  }  
+  }
+  
+  const legendMap = L.control({ position: "topright" });
+  legendMap.onAdd = () => {
+    const div = L.DomUtil.create("div", "legend");
+    div.innerHTML += `<h3>Legend</h3>`;
+    div.innerHTML += `<h4>${parameter}</h4>`;
+    div.innerHTML += `<p>The radius of the circle depends on the number of cases.</p>`;
+    div.innerHTML += `<p>${legendSize}</p>`;
+    return div;
+  };
+  legendMap.addTo(map);
+  L.control.scale({
+    metric: true,
+    imperial: false
+  }).addTo(map);
+
   const southWest = L.latLng(-180, -180);
   const northEast = L.latLng(180, 180);
   const bounds = L.latLngBounds(southWest, northEast);
@@ -61,4 +97,5 @@ export async function mapModule(parameter = 'total cases') {
   map.on('drag', ()  => {
     map.panInsideBounds(bounds, { animate: false });
   });
+
 }
