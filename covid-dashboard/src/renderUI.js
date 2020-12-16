@@ -105,6 +105,6 @@ function openFull() {
 
 
 export function fullScreen() {
-  const btn = document.querySelector('.btn__full')
-  btn.addEventListener('click', openFull)
+  const btn = document.querySelector('.btn__full');
+  btn.addEventListener('click', openFull);
 }

@@ -194,10 +194,10 @@ export const Keyboard = {
     this.elements.main.appendChild(this.elements.keysContainer);
     document.body.appendChild(this.elements.main);
     document.querySelector(".btn__key").addEventListener("click", () => {
-      // Automatically use keyboard for elements with .use-keyboard-input
       document.querySelectorAll(".use-keyboard-input").forEach((element) => {
-        //  element.addEventListener('focus', () => {
+        
         if (this.elements.main.classList.contains("keyboard--hidden")) {
+          document.querySelector(".use-keyboard-input").focus();
           this.open(element.value, (currentValue) => {
             const cursor = element.selectionStart;
             if (element.selectionStart < element.value.length) {

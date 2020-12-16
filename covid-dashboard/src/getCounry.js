@@ -8,5 +8,5 @@ export function getCount(event) {
  
  export function getCountry() {
    const countryList = document.querySelector('.list__contries');
-   countryList.addEventListener('click', (event) => getCount(event))
+   countryList.addEventListener('click', (event) => getCount(event));
   }

@@ -23,7 +23,7 @@ export function inputSearch(event, input) {
 
 export default function liveSearch() {
     const input = document.querySelector('.list__search');
-    input.addEventListener('input', (event) => inputSearch(event, input))
+    input.addEventListener('input', (event) => inputSearch(event, input));
 }
 
 
