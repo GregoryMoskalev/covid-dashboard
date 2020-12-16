@@ -2,6 +2,7 @@ $colorLine: #383838;
 
 .list {
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -9,10 +10,10 @@ $colorLine: #383838;
   background-color: #252423;
   width: 280px;
   height: 500px;
+  transition: .5s;
 
 
   &__search, &__select {
-      width: 200px;
       height: 30px;
       background-color: black;
       color: blanchedalmond;
@@ -21,7 +22,12 @@ $colorLine: #383838;
   }
 
   &__select {
+     width: 206px;
      margin-top: 5px;
+  }
+
+  &__search {
+    width: 170px;
   }
 
   &__contries {
@@ -45,6 +51,38 @@ $colorLine: #383838;
    	border-radius: 2px;
    	background-color: rgba(0,0,0,0.5);
  	  box-shadow: 0 0 1px rgba(255,255,255,0.5);
+    }
+  }
+
+  .btn__full{
+    width: 20px;
+    height: 20px;
+    background-image: url('https://img.icons8.com/fluent-systems-filled/20/cccccc/full-screen.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    display: none;
+  }
+  &:hover .btn__full{
+   display: block;
+  }
+}
+
+.wrap__search {
+  display: flex;
+  .btn__key{
+    width: 30px;
+    background-image: url('https://img.icons8.com/metro/30/34495E/keyboard.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: .3s;
+    cursor: pointer;
+
+    &:hover {
+      background-image: url('https://img.icons8.com/metro/30/CCCCCC/keyboard.png');
     }
   }
 }
@@ -80,4 +118,9 @@ $colorLine: #383838;
 
 .hide {
   display: none;
+}
+.full-screen {
+  width: 100%;
+  height: 100vh;
+  z-index: 100;
 }

@@ -2,7 +2,6 @@ export function getCount(event) {
   const wr = event.target.closest('.country')
   const countryTitle = wr.querySelector('.country__title');
   const res = countryTitle.innerHTML;
-  // console.log(res)
   return res;
  }
  
