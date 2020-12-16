@@ -35,30 +35,6 @@ module.exports = {
       filename: 'main.css'
     })
   ],
-  resolve: {
-    alias: {
-        "./images/layers.png$": path.resolve(
-            __dirname,
-            "./node_modules/leaflet/dist/images/layers.png"
-        ),
-        "./images/layers-2x.png$": path.resolve(
-            __dirname,
-            "./node_modules/leaflet/dist/images/layers-2x.png"
-        ),
-        "./images/marker-icon.png$": path.resolve(
-            __dirname,
-            "./node_modules/leaflet/dist/images/marker-icon.png"
-        ),
-        "./images/marker-icon-2x.png$": path.resolve(
-            __dirname,
-            "./node_modules/leaflet/dist/images/marker-icon-2x.png"
-        ),
-        "./images/marker-shadow.png$": path.resolve(
-            __dirname,
-            "./node_modules/leaflet/dist/images/marker-shadow.png"
-        )
-    }
-  },
   module: {
     rules: [
       // JavaScript
@@ -70,6 +46,10 @@ module.exports = {
       {
         test: /\.(s*)css$/,
         use: [ miniCss.loader, 'css-loader', 'sass-loader' ]
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: 'file-loader'
       }
     ]
   }

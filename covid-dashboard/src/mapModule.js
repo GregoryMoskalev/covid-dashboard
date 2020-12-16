@@ -1,8 +1,9 @@
 import L from 'leaflet';
 import { getData } from './getData.js';
+import imgUrl from './img/icon-fullscreen-2x.png'
 
 
-export async function mapModule(parameter = 'Total cases') {
+export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
   const url = `https://corona.lmao.ninja/v3/covid-19/countries`;
   const countryData = await getData(url);
 
@@ -24,29 +25,21 @@ export async function mapModule(parameter = 'Total cases') {
     }
   }
 
-  let legendSize;
-  if (parameter === 'Last day cases') {
-    legendSize = 'For every 10 meters of radius there is 1 case.';
-  }
-  if (parameter === 'On 100 000 population') {
-    legendSize = 'For every 10 meters of radius there is 1 case.';
-  }
-  if (parameter === 'Total cases') {
-    legendSize = 'For every 1 meter of radius there is 20 case.';
-  }
-
+  
   const mapOptions = {
     center: [53.902284, 27.561831],
     zoom: 4,
-    maxZoom: 8,
+    maxZoom: 7,
     minZoom: 2,
     attributionControl: false, 
+    fullscreenControl: true
   }
-
-  const map = new L.Map('map', mapOptions);
-  const layer = new L.TileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png');
+  
+  const map = new L.Map(mapEl, mapOptions);
+  const layer = new L.TileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png');
   map.addLayer(layer);
-
+  
+  // https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
   
   for (let j = 0; j < countryData.length; j += 1) {
     const dataCircleValue = choseMap(parameter, j);
@@ -56,9 +49,8 @@ export async function mapModule(parameter = 'Total cases') {
       fillColor: 'red',
       fillOpacity: 1,
       radius: dataCircleValue[0]
-      // radius: countryData[j].cases / 20
     }).addTo(map);
-
+    
     circle.on('mouseover', () => {
       const popupLocation1 = new L.LatLng(lat, long);
       const popupContent1 = `${country}: ${parameter} ${dataCircleValue[1]}`;
@@ -72,9 +64,31 @@ export async function mapModule(parameter = 'Total cases') {
         map.removeLayer(popup1);
       });
     });
+    
+    circle.on('click', () =>{
+      console.log(`${country}`);
+    });
   }
   
-  const legendMap = L.control({ position: "topright" });
+  // Legend
+  const legendMap = L.control({ position: "bottomright" });
+  const onFullScreen = L.control({ position: "topright" });
+  let legendSize;
+
+  if (parameter === 'Last day cases' || parameter === 'On 100 000 population') {
+    legendSize = 'For every 10 meters of radius there is 1 case.';
+  }
+  if (parameter === 'Total cases') {
+    legendSize = 'For every 1 meter of radius there is 20 case.';
+  }
+  
+  onFullScreen.onAdd = () => {
+    const img = L.DomUtil.create("img", "img-full-screen");
+    img.setAttribute('src', imgUrl);
+    return img;
+  };
+  onFullScreen.addTo(map);
+
   legendMap.onAdd = () => {
     const div = L.DomUtil.create("div", "legend");
     div.innerHTML += `<h3>Legend</h3>`;
@@ -84,18 +98,27 @@ export async function mapModule(parameter = 'Total cases') {
     return div;
   };
   legendMap.addTo(map);
-  L.control.scale({
-    metric: true,
-    imperial: false
-  }).addTo(map);
-
+  
+  L.control.scale({imperial: false}).addTo(map);
+  
+  // Block scroll
   const southWest = L.latLng(-180, -180);
   const northEast = L.latLng(180, 180);
   const bounds = L.latLngBounds(southWest, northEast);
-
+  
   map.setMaxBounds(bounds);
   map.on('drag', ()  => {
     map.panInsideBounds(bounds, { animate: false });
   });
 
+  // const onFullScreenBtn = document.querySelector('.img-full-screen');
+  // onFullScreenBtn.addEventListener('click', (e) => {
+  //   e.preventDefault();
+  //   console.log(e.target);
+
+  //   const bigMap = document.querySelector('#bigMap');
+  //   bigMap.classList.add('active');
+    
+  // });
+  // mapModule(parameter, 'bigMap')
 }
