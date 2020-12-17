@@ -1,9 +1,9 @@
 import './scss/main.scss';
 import Table from './Table.js';
-import Chart from './Chart.js';
+import Charts from './Charts.js';
 
 const tb = new Table();
-const ch = new Chart();
+const ch = new Charts();
 
 tb.init();
-ch.renderCanvas();
+ch.renderMyChart();

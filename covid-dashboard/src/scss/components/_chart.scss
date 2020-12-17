@@ -1,0 +1,11 @@
+.chart {
+  position: relative;
+  width: 50rem;
+
+  border: 1px solid $color-grey-dark;
+  border-radius: .5rem;
+  padding: .8rem;
+  &-wrapper {
+    margin: 4rem;
+  }
+}

@@ -83,9 +83,9 @@ export default class Table {
 
   fillTableCells() {
     this.cells[this.selectorTime].forEach((_, index) => {
-      const iHtml = `
+      this.tableCell[index].innerHTML = `
       <h3 class="cell-heading">${this.cellsHeaders[index]}</h3>`;
-      this.cellsData[index] = this.newHtmlElement('span', 'table__data', iHtml);
+      this.cellsData[index] = this.newHtmlElement('span', 'table__data');
       this.tableCell[index].appendChild(this.cellsData[index]);
     });
   }
