@@ -11,31 +11,29 @@ body {
 }
 
 #map {
-  margin: 0 auto;
+  margin: auto;
   height: 800px;
   width: 1200px;
   border-radius: 15px;
   border:solid 1px black;
   transition: .8s;
-  &.full-screen {
-    width: 100%;
-    height: 100vh;
-  }
 }
 
 #bigMap {
   top: 0;
   left: 0;
-  position: relative;
+  width: 100%;
+  height: 99vh;
+  position: absolute;
   display: none;
   margin: 0 auto;
   border-radius: 15px;
   border:solid 1px black;
-  transition: .8s;  
-  width: 95%;
-  height: 95vh;
+  transition: .8s;
+
   &.active {
     display: block;
+    z-index: 99999999;
   }
 }
 
@@ -53,4 +51,8 @@ body {
 
 .img-full-screen {
   cursor: pointer;
+  transition: .4s;
+  &:hover {
+    transform: scale(1.1);
+  }
 }

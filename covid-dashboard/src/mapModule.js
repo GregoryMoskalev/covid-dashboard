@@ -17,7 +17,6 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
         countryData[country].casesPerOneMillion, 
         countryData[country].casesPerOneMillion / 10
       ];
-      // case 'total cases': return [countryData[country].cases / 20, countryData[country].cases];
       default: return [
         countryData[country].cases / 20, 
         countryData[country].cases
@@ -30,7 +29,7 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
     center: [53.902284, 27.561831],
     zoom: 4,
     maxZoom: 7,
-    minZoom: 2,
+    minZoom: 3,
     attributionControl: false, 
     fullscreenControl: true
   }
@@ -39,7 +38,7 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
   const layer = new L.TileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png');
   map.addLayer(layer);
   
-  // https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
+  // Dark theme - https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
   
   for (let j = 0; j < countryData.length; j += 1) {
     const dataCircleValue = choseMap(parameter, j);
@@ -64,8 +63,8 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
         map.removeLayer(popup1);
       });
     });
-    
-    circle.on('click', () =>{
+    // Click circle change table?
+    circle.on('click', () => {
       console.log(`${country}`);
     });
   }
@@ -101,7 +100,7 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
   
   L.control.scale({imperial: false}).addTo(map);
   
-  // Block scroll
+  // Block scroll multi map
   const southWest = L.latLng(-180, -180);
   const northEast = L.latLng(180, 180);
   const bounds = L.latLngBounds(southWest, northEast);
@@ -111,14 +110,20 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
     map.panInsideBounds(bounds, { animate: false });
   });
 
-  // const onFullScreenBtn = document.querySelector('.img-full-screen');
-  // onFullScreenBtn.addEventListener('click', (e) => {
-  //   e.preventDefault();
-  //   console.log(e.target);
-
-  //   const bigMap = document.querySelector('#bigMap');
-  //   bigMap.classList.add('active');
-    
-  // });
-  // mapModule(parameter, 'bigMap')
+  // Full screen button
+  const bigMap = document.querySelector('#bigMap');
+  const onFullScreenBtn = document.querySelector('.img-full-screen');
+  onFullScreenBtn.addEventListener('click', () => {
+    if (!bigMap.classList.contains('leaflet-container')) {
+      mapModule(parameter, 'bigMap');
+    }
+    bigMap.classList.add('active');
+  });
+  
+  const btnBigMapFullScreen = document.querySelector('#bigMap .img-full-screen');
+  if (btnBigMapFullScreen) {
+    btnBigMapFullScreen.onclick = () => {
+      bigMap.classList.remove('active');
+    }
+  }
 }
