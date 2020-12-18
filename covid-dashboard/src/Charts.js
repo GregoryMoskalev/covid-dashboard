@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import Chart from 'chart.js';
 import Table from './Table.js';
+import { convertNumberToSI, monthFromNumber, convertDateUSToEU } from './utilities.js';
 
 export default class Charts extends Table {
   constructor() {
@@ -10,7 +12,6 @@ export default class Charts extends Table {
 
   async renderMyChart() {
     const response = await axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all');
-
     this.chart = this.newHtmlElement('div', 'chart');
     this.chartParent.appendChild(this.chart);
     this.ctx = this.newHtmlElement('canvas');
@@ -20,7 +21,7 @@ export default class Charts extends Table {
     this.cumulativeCases = new Chart(this.ctx, {
       type: 'line',
       data: {
-        labels: Object.keys(response.data.cases),
+        labels: convertDateUSToEU(Object.keys(response.data.cases)),
         datasets: [
           {
             label: 'Cumulative Cases',
@@ -41,6 +42,26 @@ export default class Charts extends Table {
             fill: 'Disabled',
           },
         ],
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                callback: (value) => convertNumberToSI(value),
+              },
+            },
+          ],
+          xAxes: [
+            {
+              stacked: true,
+              ticks: {
+                maxTicksLimit: 6,
+                callback: (value) => monthFromNumber(value),
+              },
+            },
+          ],
+        },
       },
     });
   }
