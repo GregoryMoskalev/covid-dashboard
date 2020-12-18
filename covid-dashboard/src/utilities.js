@@ -37,4 +37,26 @@ function convertDateUSToEU(dataArr) {
   return arr;
 }
 
-export { convertNumberToSI, monthFromNumber, convertDateUSToEU };
+function dailyFromCumulative(dataArr) {
+  const arr = [ ...dataArr ];
+  return arr.map((n, i) => {
+    return i > 0 ? n - arr[i - 1] : n;
+  });
+}
+
+function newHtmlElement(tag, className, iHtml = null) {
+  const element = document.createElement(tag);
+  element.classList.add(className);
+  if (iHtml) {
+    element.innerHTML = iHtml;
+  }
+  return element;
+}
+
+export {
+  convertNumberToSI,
+  monthFromNumber,
+  convertDateUSToEU,
+  dailyFromCumulative,
+  newHtmlElement,
+};
