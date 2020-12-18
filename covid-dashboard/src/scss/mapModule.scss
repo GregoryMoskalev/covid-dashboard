@@ -11,33 +11,22 @@ body {
 }
 
 #map {
+
+  // TODO Del width/height
+  width: 800px;
+  height: 600px;
+
   margin: auto;
-  height: 800px;
-  width: 1200px;
+  min-height: 320px;
+  min-width: 320px;
   border-radius: 15px;
   border:solid 1px black;
   transition: .2s;
   &.active {
+    position: absolute;
+    z-index: 10;
     width: 100%;
     height: 98vh;
-  }
-}
-
-#bigMap {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 99vh;
-  position: absolute;
-  display: none;
-  margin: 0 auto;
-  border-radius: 15px;
-  border:solid 1px black;
-  transition: .8s;
-
-  &.active {
-    display: block;
-    z-index: 99999999;
   }
 }
 
