@@ -270,7 +270,9 @@ export const Keyboard = {
     });
 
     document.addEventListener("keydown", (evt) => {
-      if (this.properties.closed) return;
+      if (this.properties.closed) {
+        return;
+      };
       document.querySelectorAll(".keyboard__key").forEach((button) => {
         if (button.innerHTML.toLowerCase() == evt.key.toLowerCase()) {
           button.classList.add("active");

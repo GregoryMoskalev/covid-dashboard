@@ -1,29 +1,28 @@
-import {dataListCovid, objSort} from "./covidList.js";
+import { dataListCovid, objSort } from "./covidList.js";
 
 export function renderUI() {
+  const list = document.querySelector(".list");
+  const wrapSearch = document.createElement("div");
+  const search = document.createElement("input");
+  const select = document.createElement("select");
+  const listContries = document.createElement("div");
+  const btnKeyBoard = document.createElement("div");
+  const btnFullScreen = document.createElement("div");
 
-  const list = document.querySelector('.list');
-  const wrapSearch = document.createElement('div');
-  const search = document.createElement('input');
-  const select = document.createElement('select');
-  const listContries = document.createElement('div');
-  const btnKeyBoard = document.createElement('div');
-  const btnFullScreen = document.createElement('div');
+  list.insertAdjacentElement("afterbegin", btnFullScreen);
+  list.insertAdjacentElement("afterbegin", wrapSearch);
+  wrapSearch.insertAdjacentElement("afterbegin", search);
+  wrapSearch.insertAdjacentElement("beforeend", btnKeyBoard);
+  wrapSearch.insertAdjacentElement("afterend", select);
+  select.insertAdjacentElement("afterend", listContries);
 
-  list.insertAdjacentElement('afterbegin', btnFullScreen);
-  list.insertAdjacentElement('afterbegin', wrapSearch);
-  wrapSearch.insertAdjacentElement('afterbegin', search);
-  wrapSearch.insertAdjacentElement('beforeend', btnKeyBoard);
-  wrapSearch.insertAdjacentElement('afterend', select);
-  select.insertAdjacentElement('afterend', listContries);
-
-  btnFullScreen.classList.add('btn__full');
-  wrapSearch.classList.add('wrap__search');
-  btnKeyBoard.classList.add('btn__key');
-  search.classList.add('list__search');
-  search.classList.add('use-keyboard-input');
-  select.classList.add('list__select');
-  listContries.classList.add('list__contries');
+  btnFullScreen.classList.add("btn__full");
+  wrapSearch.classList.add("wrap__search");
+  btnKeyBoard.classList.add("btn__key");
+  search.classList.add("list__search");
+  search.classList.add("use-keyboard-input");
+  select.classList.add("list__select");
+  listContries.classList.add("list__contries");
 }
 
 function include(title, str) {
@@ -48,7 +47,7 @@ export async function renderListCountries(data) {
   if (document.querySelectorAll(".country").length) {
     document.querySelectorAll(".country").forEach((x) => x.remove());
   }
-  
+
   const listContries = document.querySelector(".list__contries");
   arr.forEach((x) => {
     listContries.insertAdjacentHTML(
@@ -66,13 +65,13 @@ export async function renderListCountries(data) {
 
 function getValueList() {
   const data = this.value;
-  const input = document.querySelector('.list__search');
+  const input = document.querySelector(".list__search");
   renderListCountries(data);
-  input.value = '';
+  input.value = "";
   return data;
- }
+}
 
- export function defineList() {
+export function defineList() {
   const DATA_COVID = [
     "total Confirmed",
     "total Death",
@@ -87,7 +86,7 @@ function getValueList() {
     "new Death per 100000",
     "new Recovered per 100000",
   ];
-  const list = document.querySelector('.list__select');
+  const list = document.querySelector(".list__select");
   DATA_COVID.map((element) => {
     const reg = element.replace(/\s/g, "");
     list.insertAdjacentHTML(
@@ -99,12 +98,3 @@ function getValueList() {
   });
 }
 
-function openFull() {
-  document.querySelector('.list').classList.toggle('full-screen');
-}
-
-
-export function fullScreen() {
-  const btn = document.querySelector('.btn__full');
-  btn.addEventListener('click', openFull);
-}

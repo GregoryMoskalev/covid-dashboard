@@ -1,8 +1,13 @@
 @import './list';
 @import './keyboard';
 
-
-body {
- // background-color: orange;
+.hide {
+  display: none;
 }
-
+.full-screen {
+top: 0;
+left: 0;
+ width: 100vw;
+ height: 100vh;
+ z-index: 100;
+}

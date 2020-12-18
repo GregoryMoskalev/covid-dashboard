@@ -4,34 +4,39 @@ export const dataListCovid = async function () {
   const item = [];
   const rate = 100000;
   item.length = 0;
-  try{
-  const list = await getCovidCounty();
-  list.forEach((data, ind) => {
-    const populationOnThousand = data.population / rate;
-    item[ind] = {
-      country: data.country,
-      flag: data.countryInfo.flag,
-      totalConfirmed: data.cases, // общ кол-во заболевших
-      totalDeath: data.deaths, // общ, количество смертей
-      totalRecovered: data.recovered, // общ, количество вылечившихся
-      newConfirmed: data.todayCases, // last day кол-во заболевших
-      newDeath: data.todayDeaths, // last day количество смертей
-      newRecoverd: data.todayRecovered, // last day заболевших
-      totalConfirmedper100000: Math.ceil(data.cases / populationOnThousand), // общ кол-во заболевших на 100к
-      totalDeathper100000: Math.ceil(data.deaths / populationOnThousand), // общ, количество смертей на 100к
-      totalRecoveredper100000: Math.ceil(data.recovered / populationOnThousand), // общ, количество вылечившихся на 100к
-      newConfirmedper100000: Math.ceil(data.todayCases / populationOnThousand), // last day кол-во заболевших на 100к
-      newDeathper100000: Math.ceil(data.todayDeaths / populationOnThousand), // last day количество смертей на 100к
-      newRecoveredper100000: Math.ceil(data.todayRecovered / populationOnThousand), // last day заболевших на 100к
-    };
-  });
-}
-catch(error) {
-  return 'err';
-}
+  try {
+    const list = await getCovidCounty();
+    list.forEach((data, ind) => {
+      const populationOnThousand = data.population / rate;
+      item[ind] = {
+        country: data.country,
+        flag: data.countryInfo.flag,
+        totalConfirmed: data.cases, 
+        totalDeath: data.deaths,
+        totalRecovered: data.recovered, 
+        newConfirmed: data.todayCases, 
+        newDeath: data.todayDeaths,
+        newRecoverd: data.todayRecovered, 
+        totalConfirmedper100000: Math.ceil(data.cases / populationOnThousand), 
+        totalDeathper100000: Math.ceil(data.deaths / populationOnThousand), 
+        totalRecoveredper100000: Math.ceil(
+          data.recovered / populationOnThousand
+        ), 
+        newConfirmedper100000: Math.ceil(
+          data.todayCases / populationOnThousand
+        ), 
+        newDeathper100000: Math.ceil(data.todayDeaths / populationOnThousand),
+        newRecoveredper100000: Math.ceil(
+          data.todayRecovered / populationOnThousand
+        ), 
+      };
+    });
+  } catch (error) {
+    return "err";
+  }
   return item;
 };
 
 export function objSort(field) {
-  return ((a,b) => a[field] > b[field] ? 1 : -1);
+  return (a, b) => (a[field] > b[field] ? 1 : -1);
 }

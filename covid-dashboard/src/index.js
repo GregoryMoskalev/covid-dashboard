@@ -1,7 +1,13 @@
-import './scss/main.scss';
-import {renderUI, defineList, renderListCountries, fullScreen} from "./renderUI.js";
+import "./scss/main.scss";
+import {
+  renderUI,
+  defineList,
+  renderListCountries,
+} from "./renderUI.js";
 import liveSearch from "./search.js";
-import {Keyboard} from "./keyboard.js"
+import { Keyboard } from "./keyboard.js";
+import  getCountry from "./getCountry.js";
+import fullScreen from "./fullScreen.js"
 
 function init() {
   renderUI();
@@ -9,10 +15,10 @@ function init() {
   renderListCountries();
   liveSearch();
   fullScreen();
-  window.addEventListener('DOMContentLoaded', function() {
+  getCountry();
+  window.addEventListener("DOMContentLoaded", function () {
     Keyboard.init();
   });
 }
-
 
 init();
