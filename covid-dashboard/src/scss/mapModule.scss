@@ -16,7 +16,11 @@ body {
   width: 1200px;
   border-radius: 15px;
   border:solid 1px black;
-  transition: .8s;
+  transition: .2s;
+  &.active {
+    width: 100%;
+    height: 98vh;
+  }
 }
 
 #bigMap {
@@ -50,6 +54,8 @@ body {
 }
 
 .img-full-screen {
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   transition: .4s;
   &:hover {

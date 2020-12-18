@@ -1,11 +1,14 @@
 import L from 'leaflet';
 import { getData } from './getData.js';
-import imgUrl from './img/icon-fullscreen-2x.png'
+import { createEl } from './createEl.js';
+import imgUrl from './img/fs.png'
 
 
 export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
   const url = `https://corona.lmao.ninja/v3/covid-19/countries`;
   const countryData = await getData(url);
+  const mapContainer = document.querySelector('#map-container');
+  createEl(mapContainer, 'div', '', 'map');
 
   function choseMap (condition, country) {
     switch(condition) {
@@ -63,7 +66,7 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
         map.removeLayer(popup1);
       });
     });
-    // Click circle change table?
+    // Click circle change table
     circle.on('click', () => {
       console.log(`${country}`);
     });
@@ -101,8 +104,8 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
   L.control.scale({imperial: false}).addTo(map);
   
   // Block scroll multi map
-  const southWest = L.latLng(-180, -180);
-  const northEast = L.latLng(180, 180);
+  const southWest = L.latLng(-90, -180);
+  const northEast = L.latLng(90, 180);
   const bounds = L.latLngBounds(southWest, northEast);
   
   map.setMaxBounds(bounds);
@@ -111,19 +114,10 @@ export async function mapModule(parameter = 'Total cases', mapEl = 'map') {
   });
 
   // Full screen button
-  const bigMap = document.querySelector('#bigMap');
   const onFullScreenBtn = document.querySelector('.img-full-screen');
   onFullScreenBtn.addEventListener('click', () => {
-    if (!bigMap.classList.contains('leaflet-container')) {
-      mapModule(parameter, 'bigMap');
-    }
-    bigMap.classList.add('active');
+    const mapSelector = document.querySelector('#map');
+    mapSelector.classList.toggle('active');
+    setTimeout(() => map.invalidateSize(), 200);
   });
-  
-  const btnBigMapFullScreen = document.querySelector('#bigMap .img-full-screen');
-  if (btnBigMapFullScreen) {
-    btnBigMapFullScreen.onclick = () => {
-      bigMap.classList.remove('active');
-    }
-  }
 }
