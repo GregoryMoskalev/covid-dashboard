@@ -17,13 +17,13 @@ export default class Table extends Charts {
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
       this.renderTableCellsData();
-      this.renderMyChart(this.selectorTime);
+      this.renderMyCharts(Number(this.selectorTime), Number(this.selectorCalc), this.mod);
     };
 
     this.onChangeTime = (evt) => {
       this.selectorTime = evt.target.value;
       this.renderTableCellsData();
-      this.renderMyChart(this.selectorTime);
+      this.renderMyCharts(Number(this.selectorTime), Number(this.selectorCalc), this.mod);
     };
   }
 

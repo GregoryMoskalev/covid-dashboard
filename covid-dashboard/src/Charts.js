@@ -8,36 +8,62 @@ import {
 } from './utilities.js';
 
 export default class Charts {
-  async renderMyChart(time) {
+  constructor() {
+    this.rate = 100000;
+  }
+
+  async renderMyCharts(time, rate, mod) {
+    this.ctx = [];
     [ this.chartParent ] = document.body.getElementsByClassName('chart-wrapper');
 
     while (this.chartParent.lastElementChild) {
       this.chartParent.removeChild(this.chartParent.lastElementChild);
     }
 
-    const response = await axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all');
-    this.chart = newHtmlElement('div', 'chart');
-    this.chartParent.appendChild(this.chart);
+    this.response = await axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all');
+
+    this.cumulativeChart = newHtmlElement('div', 'chart');
+    this.chartParent.appendChild(this.cumulativeChart);
     this.ctx = newHtmlElement('canvas');
-    this.chart.appendChild(this.ctx);
+    this.cumulativeChart.appendChild(this.ctx);
 
-    let cases = [ 'Cumulative Cases', Object.values(response.data.cases) ];
-    let deaths = [ 'Cumulative Deaths', Object.values(response.data.deaths) ];
-    let recovered = [ 'Cumulative Recovered', Object.values(response.data.recovered) ];
-    if (Number(time) !== 0) {
-      cases = [ 'Daily Cases', dailyFromCumulative(Object.values(response.data.cases)) ];
-      deaths = [ 'Daily Cases', dailyFromCumulative(Object.values(response.data.deaths)) ];
-      recovered = [ 'Daily Cases', dailyFromCumulative(Object.values(response.data.recovered)) ];
-    }
+    const data = {
+      cases: Object.values(this.response.data.cases).map(
+        (el) => (!rate ? el : +(el / mod).toFixed(2)),
+      ),
+      deaths: Object.values(this.response.data.deaths).map(
+        (el) => (!rate ? el : +(el / mod).toFixed(2)),
+      ),
+      recovered: Object.values(this.response.data.recovered).map(
+        (el) => (!rate ? el : +(el / mod).toFixed(2)),
+      ),
+    };
 
-    this.cumulativeCases = new Chart(this.ctx, {
+    this.cumulativeData = [
+      [ 'Cumulative Cases', 'Cumulative Deaths', 'Cumulative Recovered' ],
+      [ data.cases, data.deaths, data.recovered ],
+    ];
+    this.dailyData = [
+      [ 'Daily Cases', 'Daily Deaths', 'Daily Recovered' ],
+      [
+        dailyFromCumulative(data.cases),
+        dailyFromCumulative(data.deaths),
+        dailyFromCumulative(data.recovered),
+      ],
+    ];
+
+    this.renderChart(time === 0 ? this.cumulativeData : this.dailyData, data.cases, rate, time);
+  }
+
+  renderChart(data, label, rate, time) {
+    this.chart = new Chart(this.ctx, {
       type: 'line',
       data: {
-        labels: Object.keys(response.data.cases),
+        labels: label,
         datasets: [
           {
-            label: cases[0],
-            data: cases[1],
+            label: data[0][0],
+            data: data[1][0],
             backgroundColor: '#212121',
             borderColor: '#212121',
             fill: 'Disabled',
@@ -46,8 +72,8 @@ export default class Charts {
             borderWidth: 2,
           },
           {
-            label: deaths[0],
-            data: deaths[1],
+            label: data[0][1],
+            data: data[1][1],
             backgroundColor: '#d50000',
             borderColor: '#d50000',
             fill: 'Disabled',
@@ -56,8 +82,8 @@ export default class Charts {
             borderWidth: 2,
           },
           {
-            label: recovered[0],
-            data: recovered[1],
+            label: data[0][2],
+            data: data[1][2],
             backgroundColor: '#4caf50',
             borderColor: '#4caf50',
             fill: 'Disabled',
@@ -68,6 +94,10 @@ export default class Charts {
         ],
       },
       options: {
+        title: {
+          display: true,
+          text: `${!rate ? 'Total' : 'Per 100k'}, ${!time ? 'All Time' : 'Last Day'}`,
+        },
         tooltips: {
           callbacks: {
             title: (item) => {
@@ -95,64 +125,4 @@ export default class Charts {
       },
     });
   }
-
-  // async renderMyChart2() {
-  //   const response = await axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all');
-  //   this.chart = this.newHtmlElement('div', 'chart');
-  //   this.chartParent.appendChild(this.chart);
-  //   this.ctx = this.newHtmlElement('canvas');
-  //   this.ctx.id = 'myChart';
-  //   this.chart.appendChild(this.ctx);
-  //   console.table(Object.values(response.data.recovered));
-
-  //   this.dailyCases = new Chart(this.ctx, {
-  //     type: 'line',
-  //     data: {
-  //       labels: convertDateUSToEU(Object.keys(response.data.cases)),
-  //       datasets: [
-  //         {
-  //           label: 'Cumulative Cases',
-  //           data: dailyFromCumulative(Object.values(response.data.cases)),
-  //           backgroundColor: '#212121',
-  //           fill: 'Disabled',
-  //           borderWidth: 1,
-  //         },
-  //         {
-  //           label: 'Cumulative Deaths',
-  //           data: dailyFromCumulative(Object.values(response.data.deaths)),
-  //           backgroundColor: '#d50000',
-  //           fill: 'Disabled',
-  //           borderWidth: 1,
-  //         },
-  //         {
-  //           label: 'Cumulative Recovered',
-  //           data: dailyFromCumulative(Object.values(response.data.recovered)),
-  //           backgroundColor: '#4caf50',
-  //           fill: 'Disabled',
-  //           borderWidth: 1,
-  //         },
-  //       ],
-  //     },
-  //     options: {
-  //       scales: {
-  //         yAxes: [
-  //           {
-  //             ticks: {
-  //               callback: (value) => convertNumberToSI(value),
-  //             },
-  //           },
-  //         ],
-  //         xAxes: [
-  //           {
-  //             stacked: true,
-  //             ticks: {
-  //               maxTicksLimit: 6,
-  //               callback: (value) => monthFromNumber(value),
-  //             },
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   });
-  // }
 }

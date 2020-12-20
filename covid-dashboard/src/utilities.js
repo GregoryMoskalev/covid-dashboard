@@ -40,7 +40,11 @@ function convertDateUSToEU(dataArr) {
 function dailyFromCumulative(dataArr) {
   const arr = [ ...dataArr ];
   return arr.map((n, i) => {
-    return i > 0 ? n - arr[i - 1] : n;
+    if (i > 0) {
+      const daily = n - arr[i - 1];
+      return daily > 0 ? daily : 0;
+    }
+    return null;
   });
 }
 

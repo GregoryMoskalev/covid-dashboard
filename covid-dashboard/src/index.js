@@ -6,4 +6,4 @@ const tb = new Table();
 const ch = new Charts();
 
 tb.init();
-ch.renderMyChart(0);
+ch.renderMyCharts(0, 0, null);
