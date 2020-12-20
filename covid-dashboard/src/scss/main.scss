@@ -1,5 +1,8 @@
-@import "./list";
-@import "./keyboard";
+@import "components/list";
+@import "components/keyboard";
+@import 'base/variables';
+@import 'base/base';
+@import 'components/table';
 
 .hide {
     display: none;
@@ -12,3 +15,4 @@
     height: 100vh;
     z-index: 100;
 }
+

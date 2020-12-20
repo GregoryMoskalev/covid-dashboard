@@ -3,16 +3,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const miniCss = require('mini-css-extract-plugin');
+const MiniCss = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: path.resolve(__dirname, './src/index.js')
+    main: path.resolve(__dirname, './src/index.js'),
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: '[name].bundle.js'
+    filename: '[name].bundle.js',
   },
   mode: 'development',
   devServer: {
@@ -21,19 +21,19 @@ module.exports = {
     open: true,
     compress: true,
     hot: true,
-    port: 5500
+    port: 5500,
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'COVID-19 Dashboard',
       template: path.resolve(__dirname, './src/template.html'),
-      filename: 'index.html'
+      filename: 'index.html',
     }),
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new ESLintPlugin(),
-    new miniCss({
-      filename: 'main.css'
+    new MiniCss({
+      filename: 'main.css',
     }),
     new CopyPlugin({
       patterns: [
@@ -43,20 +43,15 @@ module.exports = {
   ],
   module: {
     rules: [
-      // JavaScript
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: [ 'babel-loader' ]
+        use: [ 'babel-loader' ],
       },
       {
         test: /\.(s*)css$/,
-        use: [ miniCss.loader, 'css-loader', 'sass-loader' ]
+        use: [ MiniCss.loader, 'css-loader', 'sass-loader' ],
       },
-      // {
-      //   test:  /\.mp3$/,
-      //   use: 'url-loader',
-      // },
-    ]
-  }
+    ],
+  },
 };

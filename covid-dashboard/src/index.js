@@ -1,13 +1,15 @@
 import "./scss/main.scss";
+import Table from "./table.js";
+
 import {
   renderUI,
   defineList,
   renderListCountries,
-  handleFullScreen
+  handleFullScreen,
 } from "./renderUI.js";
 import liveSearch from "./search.js";
 import { Keyboard } from "./keyboard.js";
-import  getCountry from "./getCountry.js";
+import getCountry from "./getCountry.js";
 
 function init() {
   renderUI();
@@ -22,3 +24,6 @@ function init() {
 }
 
 init();
+
+const tb = new Table();
+tb.init();
