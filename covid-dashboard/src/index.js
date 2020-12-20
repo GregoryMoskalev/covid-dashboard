@@ -3,18 +3,18 @@ import {
   renderUI,
   defineList,
   renderListCountries,
+  handleFullScreen
 } from "./renderUI.js";
 import liveSearch from "./search.js";
 import { Keyboard } from "./keyboard.js";
 import  getCountry from "./getCountry.js";
-import fullScreen from "./fullScreen.js"
 
 function init() {
   renderUI();
   defineList();
   renderListCountries();
   liveSearch();
-  fullScreen();
+  handleFullScreen();
   getCountry();
   window.addEventListener("DOMContentLoaded", function () {
     Keyboard.init();

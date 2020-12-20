@@ -1,4 +1,5 @@
 import { dataListCovid, objSort } from "./covidList.js";
+import openFull from './fullScreen.js';
 
 export function renderUI() {
   const list = document.querySelector(".list");
@@ -98,3 +99,7 @@ export function defineList() {
   });
 }
 
+export function handleFullScreen() {
+  const btn = document.querySelector(".btn__full"); 
+  btn.addEventListener("click", () => openFull(".list"));
+}

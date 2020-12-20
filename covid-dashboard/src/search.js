@@ -1,4 +1,3 @@
-
 export function inputSearch(event, input) {
   const value = input.value.trim();
   const reg = new RegExp(value, "gi");
@@ -22,7 +21,3 @@ export default function liveSearch() {
   const input = document.querySelector(".list__search");
   input.addEventListener("input", (event) => inputSearch(event, input));
 }
-
-
-
-

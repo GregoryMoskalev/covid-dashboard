@@ -195,7 +195,7 @@ export const Keyboard = {
     document.body.appendChild(this.elements.main);
     document.querySelector(".btn__key").addEventListener("click", () => {
       document.querySelectorAll(".use-keyboard-input").forEach((element) => {
-        
+
         if (this.elements.main.classList.contains("keyboard--hidden")) {
           document.querySelector(".use-keyboard-input").focus();
           this.open(element.value, (currentValue) => {
@@ -624,11 +624,11 @@ export const Keyboard = {
             }
             this.properties.value += this.properties.capsLock
               ? (keyElement.textContent = this.properties.shift
-                  ? keyElement.textContent.toLowerCase()
-                  : keyElement.textContent.toUpperCase())
+                ? keyElement.textContent.toLowerCase()
+                : keyElement.textContent.toUpperCase())
               : (keyElement.textContent = this.properties.shift
-                  ? keyElement.textContent.toUpperCase()
-                  : keyElement.textContent.toLowerCase());
+                ? keyElement.textContent.toUpperCase()
+                : keyElement.textContent.toLowerCase());
             this.triggerEvent("oninput");
             this.disableShift();
           });
@@ -722,27 +722,27 @@ export const Keyboard = {
         if (Array.isArray(this.keyLayout[this.properties.language][index])) {
           key.textContent = this.properties.shift
             ? (key.textContent = this.properties.capsLock
-                ? (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][1])
-                : (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][1]))
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1])
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1]))
             : (key.textContent = this.properties.capsLock
-                ? (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][0].toLowerCase())
-                : (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][0].toLowerCase()));
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase())
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase()));
         } else {
           key.textContent = this.properties.shift
             ? (key.textContent = this.properties.capsLock
-                ? key.textContent.toLowerCase()
-                : key.textContent.toUpperCase())
+              ? key.textContent.toLowerCase()
+              : key.textContent.toUpperCase())
             : (key.textContent = this.properties.capsLock
-                ? key.textContent.toUpperCase()
-                : key.textContent.toLowerCase());
+              ? key.textContent.toUpperCase()
+              : key.textContent.toLowerCase());
         }
       }
       index++;
@@ -771,35 +771,35 @@ export const Keyboard = {
         if (Array.isArray(this.keyLayout[this.properties.language][index])) {
           key.textContent = this.properties.shift
             ? (key.textContent = this.properties.capsLock
-                ? (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][1])
-                : (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][1]))
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1])
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1]))
             : (key.textContent = this.properties.capsLock
-                ? (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][0].toLowerCase())
-                : (key.textContent = this.keyLayout[this.properties.language][
-                    index
-                  ][0].toLowerCase()));
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase())
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase()));
 
           key.textContent = this.properties.shift
             ? (key.textContent = this.properties.capsLock
-                ? key.textContent.toLowerCase()
-                : key.textContent.toUpperCase())
+              ? key.textContent.toLowerCase()
+              : key.textContent.toUpperCase())
             : (key.textContent = this.properties.capsLock
-                ? key.textContent.toUpperCase()
-                : key.textContent.toLowerCase());
+              ? key.textContent.toUpperCase()
+              : key.textContent.toLowerCase());
         } else {
           key.textContent = this.properties.shift
             ? (key.textContent = this.properties.capsLock
-                ? key.textContent.toLowerCase()
-                : key.textContent.toUpperCase())
+              ? key.textContent.toLowerCase()
+              : key.textContent.toUpperCase())
             : (key.textContent = this.properties.capsLock
-                ? key.textContent.toUpperCase()
-                : key.textContent.toLowerCase());
+              ? key.textContent.toUpperCase()
+              : key.textContent.toLowerCase());
         }
       }
       index++;

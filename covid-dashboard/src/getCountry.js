@@ -1,4 +1,4 @@
-const countryChoise = function (country) {
+const countryChoiсe = function (country) {
   const event = new CustomEvent ( 'choiseCountry', {
     detail: {
       country,
@@ -13,7 +13,7 @@ function getCountryName(event) {
   const wr = event.target.closest(".country");
   const countryTitle = wr.querySelector(".country__title");
   const country = countryTitle.innerHTML;
-  countryChoise(country)
+  countryChoiсe(country);
   return country;
 }
 
