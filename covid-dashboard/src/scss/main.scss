@@ -1,4 +1,18 @@
+@import "components/list";
+@import "components/keyboard";
 @import 'base/variables';
 @import 'base/base';
 @import 'components/table';
+
+.hide {
+    display: none;
+}
+
+.full-screen {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+}
 

@@ -1,0 +1,825 @@
+/* eslint-disable */
+import { inputSearch } from "./search.js";
+
+window.SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+export const Keyboard = {
+  elements: {
+    main: null,
+    keysContainer: null,
+    keys: [],
+    sounds: {
+      tab: null,
+      caps: null,
+      shift: null,
+      space: null,
+      backspace: null,
+      enter: null,
+      arrowLeft: null,
+      arrowRight: null,
+      letters: [null, null],
+      recordText: [],
+    },
+    record: null,
+  },
+
+  eventHandlers: {
+    oninput: null,
+    onclose: null,
+  },
+
+  properties: {
+    value: "",
+    capsLock: false,
+    shift: false,
+    shiftPressed: false,
+    language: 0,
+    sound: false,
+    mic: false,
+    closed: false,
+  },
+
+  keyLayout: [
+    [
+      ["`", "~"],
+      ["1", "!"],
+      ["2", "@"],
+      ["3", "#"],
+      ["4", "$"],
+      ["5", "%"],
+      ["6", "^"],
+      ["7", "&"],
+      ["8", "*"],
+      ["9", "("],
+      ["0", ")"],
+      ["-", "_"],
+      ["=", "+"],
+      "backspace",
+      "tab",
+      "q",
+      "w",
+      "e",
+      "r",
+      "t",
+      "y",
+      "u",
+      "i",
+      "o",
+      "p",
+      ["[", "{"],
+      ["]", "}"],
+      ["\\", "|"],
+      "caps",
+      "a",
+      "s",
+      "d",
+      "f",
+      "g",
+      "h",
+      "j",
+      "k",
+      "l",
+      [";", ":"],
+      ["'", '"'],
+      "enter",
+      "shift",
+      "z",
+      "x",
+      "c",
+      "v",
+      "b",
+      "n",
+      "m",
+      [",", "<"],
+      [".", ">"],
+      ["/", "?"],
+      "en",
+      "done",
+      "space",
+      "arrowLeft",
+      "arrowRight",
+      "sound",
+      "mic",
+    ],
+    [
+      "ё",
+      ["1", "!"],
+      ["2", '"'],
+      ["3", "№"],
+      ["4", ";"],
+      ["5", "%"],
+      ["6", ":"],
+      ["7", "?"],
+      ["8", "*"],
+      ["9", "("],
+      ["0", ")"],
+      ["-", "_"],
+      ["=", "+"],
+      "backspace",
+      "tab",
+      "й",
+      "ц",
+      "у",
+      "к",
+      "е",
+      "н",
+      "г",
+      "ш",
+      "щ",
+      "з",
+      "х",
+      "ъ",
+      ["\\", "|"],
+      "caps",
+      "ф",
+      "ы",
+      "в",
+      "а",
+      "п",
+      "р",
+      "о",
+      "л",
+      "д",
+      "ж",
+      "э",
+      "enter",
+      "shift",
+      "я",
+      "ч",
+      "с",
+      "м",
+      "и",
+      "т",
+      "ь",
+      "б",
+      "ю",
+      [".", ","],
+      "ru",
+      "done",
+      "space",
+      "arrowLeft",
+      "arrowRight",
+      "sound",
+      "mic",
+    ],
+  ],
+
+  init() {
+    this.elements.record = new SpeechRecognition();
+    this.elements.record.interimResults = true;
+    this.elements.sounds.tab = new Audio('./assets/si.mp3');
+    this.elements.sounds.caps = new Audio("./assets/re.mp3");
+    this.elements.sounds.shift = new Audio("./assets/mi.mp3");
+    this.elements.sounds.space = new Audio("./assets/fa.mp3");
+    this.elements.sounds.backspace = new Audio("./assets/lja.mp3");
+    this.elements.sounds.enter = new Audio("./assets/sol.mp3");
+    this.elements.sounds.arrowLeft = new Audio("./assets/noty-do.mp3");
+    this.elements.sounds.arrowRight = new Audio("./assets/noty-do.mp3");
+    this.elements.sounds.letters[0] = new Audio("./assets/70b088eeae5b483.mp3");
+    this.elements.sounds.letters[1] = new Audio("./assets/e61cdb72dc8aa8c.mp3");
+    // Create main elements
+    this.elements.main = document.createElement("div");
+    this.elements.keysContainer = document.createElement("div");
+
+    // Setup main elements
+    this.elements.main.classList.add("keyboard", "keyboard--hidden");
+    this.elements.keysContainer.classList.add("keyboard__keys");
+    this.elements.keysContainer.appendChild(this.createKeys());
+
+    this.elements.keys = this.elements.keysContainer.querySelectorAll(
+      ".keyboard__key"
+    );
+
+    // Add to DOM
+    this.elements.main.appendChild(this.elements.keysContainer);
+    document.body.appendChild(this.elements.main);
+    document.querySelector(".btn__key").addEventListener("click", () => {
+      document.querySelectorAll(".use-keyboard-input").forEach((element) => {
+
+        if (this.elements.main.classList.contains("keyboard--hidden")) {
+          document.querySelector(".use-keyboard-input").focus();
+          this.open(element.value, (currentValue) => {
+            const cursor = element.selectionStart;
+            if (element.selectionStart < element.value.length) {
+              this.properties.value = `${this.properties.value.slice(
+                0,
+                cursor
+              )}${currentValue.slice(-1)}${this.properties.value.slice(
+                cursor,
+                -1
+              )}`;
+
+              element.value = currentValue = this.properties.value;
+              element.selectionStart = element.selectionEnd = cursor + 1;
+            } else {
+              element.value = currentValue;
+            }
+          });
+        } else {
+          this.close();
+          this.triggerEvent("onclose");
+        }
+      });
+    });
+
+    // stop losing focus after click on keyboard
+    document.querySelector(".keyboard").addEventListener("mousedown", (e) => {
+      e.preventDefault();
+    });
+
+    document.querySelectorAll(".keyboard__key").forEach((element) => {
+      const input = document.querySelector(".list__search");
+      element.addEventListener("click", (event) => inputSearch(event, input));
+    });
+
+    this.elements.record.addEventListener("result", (evt) => {
+      this.elements.recordText = Array.from(evt.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join("");
+    });
+
+    this.elements.record.addEventListener("end", () => {
+      document.querySelector(
+        ".use-keyboard-input"
+      ).value = this.properties.value =
+        this.properties.value + this.elements.recordText + " ";
+      this.elements.recordText = [];
+      if (this.properties.mic) {
+        this.elements.record.lang = this.properties.language
+          ? "ru-RU"
+          : "en-US";
+        this.elements.record.start();
+      }
+    });
+    document.addEventListener("keyup", (evt) => {
+      if (this.properties.closed) return;
+      document.querySelectorAll(".keyboard__key").forEach((button) => {
+        if (button.innerHTML.toLowerCase() == evt.key.toLowerCase()) {
+          button.classList.remove("active");
+        } else if (this.properties.shift) {
+          this.keyLayout[this.properties.language].forEach((key, index) => {
+            if (key[1] === evt.key || key[0] === evt.key)
+              this.elements.keys[index].classList.remove("active");
+          });
+        }
+      });
+      if (!evt.key[1]) {
+        this.properties.value = document.activeElement.value;
+      }
+    });
+
+    document.addEventListener("keydown", (evt) => {
+      if (this.properties.closed) {
+        return;
+      };
+      document.querySelectorAll(".keyboard__key").forEach((button) => {
+        if (button.innerHTML.toLowerCase() == evt.key.toLowerCase()) {
+          button.classList.add("active");
+          if (this.properties.sound) {
+            this.elements.sounds.letters[
+              this.properties.language
+            ].currentTime = 0;
+            this.elements.sounds.letters[this.properties.language].play();
+          }
+        } else if (this.properties.shift) {
+          this.keyLayout[this.properties.language].forEach((key, index) => {
+            if (key[1] === evt.key || key[0] === evt.key)
+              this.elements.keys[index].classList.add("active");
+          });
+        }
+      });
+    });
+
+    document.addEventListener("keydown", (evt) => {
+      if (this.properties.closed) return;
+      if ((evt.shiftKey && evt.ctrlKey) || evt.altKey) {
+        document.querySelector(".language").classList.add("active");
+        this.changeLanguage();
+      }
+    });
+    document.addEventListener("keyup", (evt) => {
+      if (this.properties.closed) return;
+      if (evt.shiftKey || evt.ctrlKey || evt.altKey) {
+        document.querySelector(".language").classList.remove("active");
+      }
+    });
+    document.addEventListener("keydown", (evt) => {
+      if (this.properties.closed) return;
+      switch (evt.key) {
+        case "Tab":
+          evt.preventDefault();
+          document.querySelector(".tab").classList.add("active");
+          if (this.properties.sound) {
+            this.elements.sounds.tab.currentTime = 0.3;
+            this.elements.sounds.tab.play();
+          }
+          this.properties.value += "	";
+          this.triggerEvent("oninput");
+          break;
+        case "Shift":
+          if (!evt.ctrlKey && !evt.altKey && !this.properties.shiftPressed) {
+            this.properties.shiftPressed = true;
+            document.querySelector(".shift").classList.add("active");
+            if (!this.properties.shift) {
+              document
+                .querySelector(".shift")
+                .classList.toggle("keyboard__key--active");
+              this.toggleShift();
+            }
+          }
+          break;
+        case "CapsLock":
+          if (this.properties.sound) {
+            this.elements.sounds.caps.currentTime = 0.5;
+            this.elements.sounds.caps.play();
+          }
+          this.toggleCapsLock();
+          document
+            .querySelector(".caps")
+            .classList.toggle("keyboard__key--active");
+          document.querySelector(".caps").classList.add("active");
+          break;
+        case "Backspace":
+          if (this.properties.sound) {
+            this.elements.sounds.backspace.currentTime = 0.3;
+            this.elements.sounds.backspace.play();
+          }
+          document.querySelector(".backspace").classList.add("active");
+          break;
+        case "Enter":
+          if (this.properties.sound) {
+            this.elements.sounds.enter.currentTime = 0.3;
+            this.elements.sounds.enter.play();
+          }
+          document.querySelector(".enter").classList.add("active");
+          break;
+        case "ArrowLeft":
+          if (this.properties.sound) {
+            this.elements.sounds.arrowLeft.currentTime = 0.5;
+            this.elements.sounds.arrowLeft.play();
+          }
+          document.querySelector(".arrowLeft").classList.add("active");
+          break;
+        case "ArrowRight":
+          if (this.properties.sound) {
+            this.elements.sounds.arrowRight.currentTime = 0.5;
+            this.elements.sounds.arrowRight.play();
+          }
+          document.querySelector(".arrowRight").classList.add("active");
+          break;
+        case " ":
+          if (this.properties.sound) {
+            this.elements.sounds.space.currentTime = 0.3;
+            this.elements.sounds.space.play();
+          }
+          document.querySelector(".space").classList.add("active");
+          break;
+        default:
+          break;
+      }
+    });
+    document.addEventListener("keyup", (evt) => {
+      if (this.properties.closed) return;
+      switch (evt.key) {
+        case "Tab":
+          evt.preventDefault();
+          document.querySelector(".tab").classList.remove("active");
+          break;
+        case "Shift":
+          document.querySelector(".shift").classList.remove("active");
+          this.properties.shiftPressed = false;
+          this.toggleShift();
+          document
+            .querySelector(".shift")
+            .classList.toggle("keyboard__key--active");
+
+          break;
+        case "CapsLock":
+          document.querySelector(".caps").classList.remove("active");
+          break;
+        case "Backspace":
+          document.querySelector(".backspace").classList.remove("active");
+          break;
+        case "Enter":
+          document.querySelector(".enter").classList.remove("active");
+          break;
+        case "ArrowLeft":
+          document.querySelector(".arrowLeft").classList.remove("active");
+          break;
+        case "ArrowRight":
+          document.querySelector(".arrowRight").classList.remove("active");
+          break;
+        case " ":
+          document.querySelector(".space").classList.remove("active");
+          break;
+        default:
+          break;
+      }
+    });
+  },
+
+  createKeys() {
+    const fragment = document.createDocumentFragment();
+    const createIconHTML = (icon_name) => {
+      return `<i class="material-icons">${icon_name}</i>`;
+    };
+
+    this.keyLayout[this.properties.language].forEach((key, index) => {
+      const keyElement = document.createElement("button");
+      const insertLineBreak =
+        ["backspace", "\\", "enter", "/"].indexOf(
+          Array.isArray(key) ? key[0] : key
+        ) !== -1;
+      keyElement.setAttribute("type", "button");
+      keyElement.classList.add("keyboard__key");
+      switch (key) {
+        case "mic":
+          keyElement.classList.add(
+            "keyboard__key--wide",
+            "keyboard__key--activatable"
+          );
+          keyElement.innerHTML = createIconHTML("mic");
+
+          keyElement.addEventListener("click", () => {
+            this.toggleMic();
+            keyElement.classList.toggle(
+              "keyboard__key--active",
+              this.properties.mic
+            );
+          });
+          break;
+        case "sound":
+          keyElement.classList.add(
+            "keyboard__key--wide",
+            "keyboard__key--activatable"
+          );
+          keyElement.classList.add("sound");
+
+          keyElement.innerHTML = createIconHTML("volume_up");
+
+          keyElement.addEventListener("click", () => {
+            this.toggleSound();
+            keyElement.classList.toggle(
+              "keyboard__key--active",
+              this.properties.sound
+            );
+          });
+          break;
+        case "arrowLeft":
+          keyElement.classList.add("arrowLeft");
+          keyElement.innerHTML = createIconHTML("keyboard_arrow_left");
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.arrowLeft.currentTime = 0.5;
+              this.elements.sounds.arrowLeft.play();
+            }
+            this.arrowLeft();
+          });
+          break;
+        case "arrowRight":
+          keyElement.classList.add("arrowRight");
+          keyElement.innerHTML = createIconHTML("keyboard_arrow_right");
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.arrowRight.currentTime = 0.5;
+              this.elements.sounds.arrowRight.play();
+            }
+            this.rightArrow();
+          });
+          break;
+        case "en":
+        case "ru":
+          keyElement.classList.add("language");
+          keyElement.textContent = key;
+          keyElement.addEventListener("click", () => {
+            this.changeLanguage();
+          });
+
+          break;
+        case "tab":
+          keyElement.classList.add("tab");
+          keyElement.innerHTML = createIconHTML("keyboard_tab");
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.tab.currentTime = 0.3;
+              this.elements.sounds.tab.play();
+            }
+            this.properties.value += "	";
+            this.triggerEvent("oninput");
+          });
+          break;
+        case "shift":
+          keyElement.classList.add(
+            "keyboard__key--wide",
+            "keyboard__key--activatable",
+            "shift"
+          );
+          keyElement.innerHTML = createIconHTML("keyboard_arrow_up");
+
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.shift.currentTime = 0.3;
+              this.elements.sounds.shift.play();
+            }
+            this.toggleShift();
+            keyElement.classList.toggle(
+              "keyboard__key--active",
+              this.properties.shift
+            );
+          });
+
+          break;
+        case "backspace":
+          keyElement.classList.add("keyboard__key--wide", "backspace");
+          keyElement.innerHTML = createIconHTML("backspace");
+
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.backspace.currentTime = 0.3;
+              this.elements.sounds.backspace.play();
+            }
+            this.disableShift();
+            this.handleBackspace();
+          });
+
+          break;
+
+        case "caps":
+          keyElement.classList.add(
+            "keyboard__key--wide",
+            "keyboard__key--activatable",
+            "caps"
+          );
+          keyElement.innerHTML = createIconHTML("keyboard_capslock");
+
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.caps.currentTime = 0.5;
+              this.elements.sounds.caps.play();
+            }
+            this.toggleCapsLock();
+            keyElement.classList.toggle(
+              "keyboard__key--active",
+              this.properties.capsLock
+            );
+          });
+
+          break;
+
+        case "enter":
+          keyElement.classList.add("keyboard__key--wide", "enter");
+          keyElement.innerHTML = createIconHTML("keyboard_return");
+
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.enter.currentTime = 0.3;
+              this.elements.sounds.enter.play();
+            }
+            this.properties.value += "\n";
+            this.triggerEvent("oninput");
+          });
+
+          break;
+
+        case "space":
+          this.disableShift();
+          keyElement.classList.add("keyboard__key--extra-wide", "space");
+          keyElement.innerHTML = createIconHTML("space_bar");
+
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.space.currentTime = 0.4;
+              this.elements.sounds.space.play();
+            }
+            this.properties.value += " ";
+            this.triggerEvent("oninput");
+          });
+
+          break;
+
+        case "done":
+          keyElement.classList.add(
+            "keyboard__key--wide",
+            "keyboard__key--dark"
+          );
+          keyElement.innerHTML = createIconHTML("check_circle");
+
+          keyElement.addEventListener("click", () => {
+            this.close();
+            this.triggerEvent("onclose");
+          });
+
+          break;
+
+        default:
+          keyElement.textContent = key[0].toLowerCase();
+
+          keyElement.addEventListener("click", () => {
+            if (this.properties.sound) {
+              this.elements.sounds.letters[
+                this.properties.language
+              ].currentTime = 0;
+              this.elements.sounds.letters[this.properties.language].play();
+            }
+            this.properties.value += this.properties.capsLock
+              ? (keyElement.textContent = this.properties.shift
+                ? keyElement.textContent.toLowerCase()
+                : keyElement.textContent.toUpperCase())
+              : (keyElement.textContent = this.properties.shift
+                ? keyElement.textContent.toUpperCase()
+                : keyElement.textContent.toLowerCase());
+            this.triggerEvent("oninput");
+            this.disableShift();
+          });
+
+          break;
+      }
+      fragment.appendChild(keyElement);
+
+      if (insertLineBreak) {
+        fragment.appendChild(document.createElement("br"));
+      }
+    });
+
+    return fragment;
+  },
+
+  triggerEvent(handlerName) {
+    if (typeof this.eventHandlers[handlerName] == "function") {
+      this.eventHandlers[handlerName](this.properties.value);
+    }
+  },
+
+  handleBackspace() {
+    const element = document.activeElement;
+    const cursor = element.selectionStart;
+    const left = this.properties.value.substring(0, element.selectionStart - 1);
+    const right = this.properties.value.slice(cursor);
+
+    if (element.selectionStart < element.value.length) {
+      element.value = this.properties.value = `${left}${right}`;
+
+      element.selectionStart = element.selectionEnd = cursor - 1;
+    } else {
+      element.value = this.properties.value = this.properties.value.substring(
+        0,
+        this.properties.value.length - 1
+      );
+    }
+  },
+
+  toggleMic() {
+    this.properties.mic = !this.properties.mic;
+    if (this.properties.mic) {
+      this.elements.record.lang = this.properties.language ? "ru-RU" : "en-US";
+      this.elements.record.start();
+    } else {
+      this.elements.record.stop();
+    }
+  },
+  toggleSound() {
+    this.properties.sound = !this.properties.sound;
+  },
+
+  arrowLeft() {
+    if (this.properties.shift) {
+      document.activeElement.selectionStart -= 1;
+    } else {
+      document.activeElement.selectionEnd = document.activeElement.selectionStart -= 1;
+    }
+  },
+
+  rightArrow() {
+    if (this.properties.shift) {
+      document.activeElement.selectionEnd += 1;
+    } else {
+      document.activeElement.selectionEnd = document.activeElement.selectionStart += 1;
+    }
+  },
+
+  changeLanguage() {
+    this.properties.language =
+      (this.properties.language + 1) % this.keyLayout.length;
+    for (let index = 0; index < this.elements.keys.length; index += 1) {
+      const key = this.elements.keys[index];
+      if (key.childElementCount === 0) {
+        key.textContent = Array.isArray(
+          this.keyLayout[this.properties.language][index]
+        )
+          ? this.keyLayout[this.properties.language][index][0]
+          : this.keyLayout[this.properties.language][index];
+      }
+    }
+    this.elements.record.stop();
+  },
+
+  toggleShift() {
+    this.properties.shift = !this.properties.shift;
+    let index = 0;
+    for (const key of this.elements.keys) {
+      if (key.childElementCount === 0) {
+        if (Array.isArray(this.keyLayout[this.properties.language][index])) {
+          key.textContent = this.properties.shift
+            ? (key.textContent = this.properties.capsLock
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1])
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1]))
+            : (key.textContent = this.properties.capsLock
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase())
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase()));
+        } else {
+          key.textContent = this.properties.shift
+            ? (key.textContent = this.properties.capsLock
+              ? key.textContent.toLowerCase()
+              : key.textContent.toUpperCase())
+            : (key.textContent = this.properties.capsLock
+              ? key.textContent.toUpperCase()
+              : key.textContent.toLowerCase());
+        }
+      }
+      index++;
+    }
+
+    if (this.properties.sound && this.properties.shiftPressed) {
+      this.elements.sounds.shift.currentTime = 0.3;
+      this.elements.sounds.shift.play();
+    }
+  },
+
+  disableShift() {
+    if (this.properties.shift) {
+      this.toggleShift();
+      document
+        .querySelector(".shift")
+        .classList.toggle("keyboard__key--active", this.properties.shift);
+    }
+  },
+
+  toggleCapsLock() {
+    let index = 0;
+    this.properties.capsLock = !this.properties.capsLock;
+    for (const key of this.elements.keys) {
+      if (key.childElementCount === 0) {
+        if (Array.isArray(this.keyLayout[this.properties.language][index])) {
+          key.textContent = this.properties.shift
+            ? (key.textContent = this.properties.capsLock
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1])
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][1]))
+            : (key.textContent = this.properties.capsLock
+              ? (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase())
+              : (key.textContent = this.keyLayout[this.properties.language][
+                index
+              ][0].toLowerCase()));
+
+          key.textContent = this.properties.shift
+            ? (key.textContent = this.properties.capsLock
+              ? key.textContent.toLowerCase()
+              : key.textContent.toUpperCase())
+            : (key.textContent = this.properties.capsLock
+              ? key.textContent.toUpperCase()
+              : key.textContent.toLowerCase());
+        } else {
+          key.textContent = this.properties.shift
+            ? (key.textContent = this.properties.capsLock
+              ? key.textContent.toLowerCase()
+              : key.textContent.toUpperCase())
+            : (key.textContent = this.properties.capsLock
+              ? key.textContent.toUpperCase()
+              : key.textContent.toLowerCase());
+        }
+      }
+      index++;
+    }
+  },
+
+  open(initialValue, oninput, onclose) {
+    this.properties.value = false;
+    this.properties.closed = false;
+    this.properties.value = initialValue || "";
+    this.eventHandlers.oninput = oninput;
+    this.eventHandlers.onclose = onclose;
+    this.elements.main.classList.remove("keyboard--hidden");
+  },
+
+  close() {
+    this.properties.value = "";
+    this.properties.closed = true;
+    this.eventHandlers.oninput = oninput;
+    this.eventHandlers.onclose = onclose;
+    this.elements.main.classList.add("keyboard--hidden");
+  },
+};
