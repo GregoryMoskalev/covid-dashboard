@@ -50,8 +50,12 @@ module.exports = {
       },
       {
         test: /\.(s*)css$/,
-        use: [ MiniCss.loader, 'css-loader', 'sass-loader' ],
+        use: [ MiniCss.loader, 'css-loader', 'sass-loader' ]
       },
-    ],
-  },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: 'file-loader'
+      }
+    ]
+  }
 };

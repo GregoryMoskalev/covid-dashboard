@@ -1,6 +1,6 @@
 import "./scss/main.scss";
 import Table from "./table.js";
-
+import mapModule from './mapModule.js';
 import {
   renderUI,
   defineList,
@@ -24,6 +24,8 @@ function init() {
 }
 
 init();
+
+mapModule();
 
 const tb = new Table();
 tb.init();
