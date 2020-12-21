@@ -31,11 +31,9 @@ export default class Charts {
 
     const data = {
       cases: Object.values(this.response.cases).map((el) => (!rate ? el : +(el / mod).toFixed(2))),
-      deaths: Object.values(this.response.deaths).map(
-        (el) => (!rate ? el : +(el / mod).toFixed(2)),
-      ),
+      deaths: Object.values(this.response.deaths).map((el) => (!rate ? el : (el / mod).toFixed(2))),
       recovered: Object.values(this.response.recovered).map(
-        (el) => (!rate ? el : +(el / mod).toFixed(2)),
+        (el) => (!rate ? el : (el / mod).toFixed(2)),
       ),
     };
 
@@ -51,8 +49,12 @@ export default class Charts {
         dailyFromCumulative(data.recovered),
       ],
     ];
-
-    this.renderChart(time === 0 ? this.cumulativeData : this.dailyData, data.cases, rate, time);
+    this.renderChart(
+      time === 0 ? this.cumulativeData : this.dailyData,
+      Object.keys(this.response.cases),
+      rate,
+      time,
+    );
   }
 
   renderChart(data, label, rate, time) {
