@@ -6,6 +6,8 @@
   border-radius: .5rem;
   padding: .8rem;
   &-wrapper {
-    margin: 4rem;
+    width: fit-content;
+    height: fit-content;
+    background: $color-background;
   }
 }

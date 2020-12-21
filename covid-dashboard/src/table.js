@@ -55,6 +55,20 @@ export default class Table extends Charts {
     this.renderTableCellsData();
   }
 
+  renderFullScreenBtn() {
+    this.fullScreenBtn = newHtmlElement('span', 'btn-full-screen');
+    this.fullScreenBtn.classList.add('material-icons');
+    this.fullScreenBtn.innerHTML = 'fullscreen';
+
+    this.table.appendChild(this.fullScreenBtn);
+  }
+
+  handleFullScreenBtn() {
+    this.fullScreenBtn.addEventListener('click', () => {
+      this.fullScreenBtn.parentNode.classList.toggle('full-screen');
+    });
+  }
+
   renderTableHeading() {
     if (!this.tableHeading) {
       this.tableHeading = newHtmlElement('h3', 'table__heading');
@@ -110,6 +124,8 @@ export default class Table extends Charts {
     this.data = await this.fetchData();
     this.setRegionData();
     this.renderTable();
+    this.renderFullScreenBtn();
+    this.handleFullScreenBtn();
     this.renderMyCharts(
       Number(this.selectorTime),
       Number(this.selectorCalc),
