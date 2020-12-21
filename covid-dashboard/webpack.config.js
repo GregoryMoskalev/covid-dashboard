@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCss = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -34,10 +35,14 @@ module.exports = {
     new MiniCss({
       filename: 'main.css',
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: './src/assets', to: './assets' },
+      ],
+    }),
   ],
   module: {
     rules: [
-      // JavaScript
       {
         test: /\.js$/,
         exclude: /node_modules/,
