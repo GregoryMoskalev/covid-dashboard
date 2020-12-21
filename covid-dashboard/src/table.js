@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import fetchData from './fetchData.js';
 import Charts from './Charts.js';
 import { newHtmlElement } from './utilities.js';

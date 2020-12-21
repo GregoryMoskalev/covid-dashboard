@@ -1,5 +1,5 @@
-import axios from 'axios';
 import Chart from 'chart.js';
+import fetchChartsData from './fetchChartsData.js';
 import {
   convertNumberToSI,
   convertDateUSToEU,
@@ -9,6 +9,7 @@ import {
 
 export default class Charts {
   constructor() {
+    this.fetchChartsData = fetchChartsData;
     this.rate = 100000;
   }
 
@@ -20,7 +21,7 @@ export default class Charts {
       this.chartParent.removeChild(this.chartParent.lastElementChild);
     }
 
-    this.response = await axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all');
+    this.response = await this.fetchChartsData();
 
     this.cumulativeChart = newHtmlElement('div', 'chart');
     this.chartParent.appendChild(this.cumulativeChart);
@@ -28,13 +29,11 @@ export default class Charts {
     this.cumulativeChart.appendChild(this.ctx);
 
     const data = {
-      cases: Object.values(this.response.data.cases).map(
+      cases: Object.values(this.response.cases).map((el) => (!rate ? el : +(el / mod).toFixed(2))),
+      deaths: Object.values(this.response.deaths).map(
         (el) => (!rate ? el : +(el / mod).toFixed(2)),
       ),
-      deaths: Object.values(this.response.data.deaths).map(
-        (el) => (!rate ? el : +(el / mod).toFixed(2)),
-      ),
-      recovered: Object.values(this.response.data.recovered).map(
+      recovered: Object.values(this.response.recovered).map(
         (el) => (!rate ? el : +(el / mod).toFixed(2)),
       ),
     };
