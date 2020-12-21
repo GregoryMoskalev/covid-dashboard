@@ -1,6 +1,5 @@
 import './scss/main.scss';
 import Table from './Table.js';
-import Charts from './Charts.js';
 
 import { renderUI, defineList, renderListCountries, handleFullScreen } from './renderUI.js';
 import liveSearch from './search.js';
@@ -22,6 +21,4 @@ function init() {
 init();
 
 const tb = new Table();
-const ch = new Charts();
 tb.init();
-ch.renderMyCharts(0, 0, null);

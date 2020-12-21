@@ -13,7 +13,8 @@ export default class Charts {
     this.rate = 100000;
   }
 
-  async renderMyCharts(time, rate, mod) {
+  async renderMyCharts(time, rate, mod, country) {
+    this.country = country;
     this.ctx = [];
     [ this.chartParent ] = document.body.getElementsByClassName('chart-wrapper');
 
@@ -21,7 +22,7 @@ export default class Charts {
       this.chartParent.removeChild(this.chartParent.lastElementChild);
     }
 
-    this.response = await this.fetchChartsData();
+    this.response = await this.fetchChartsData(country);
 
     this.cumulativeChart = newHtmlElement('div', 'chart');
     this.chartParent.appendChild(this.cumulativeChart);
@@ -95,7 +96,9 @@ export default class Charts {
       options: {
         title: {
           display: true,
-          text: `${!rate ? 'Total' : 'Per 100k'}, ${!time ? 'All Time' : 'Last Day'}`,
+          text: `${!this.country ? 'Global' : this.country}, ${!rate ? '' : 'Per 100k, '}${!time
+            ? 'All Time'
+            : 'Last Day'}`,
         },
         tooltips: {
           callbacks: {

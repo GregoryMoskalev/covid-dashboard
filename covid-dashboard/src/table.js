@@ -16,13 +16,23 @@ export default class Table extends Charts {
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
       this.renderTableCellsData();
-      this.renderMyCharts(Number(this.selectorTime), Number(this.selectorCalc), this.mod);
+      this.renderMyCharts(
+        Number(this.selectorTime),
+        Number(this.selectorCalc),
+        this.mod,
+        this.country,
+      );
     };
 
     this.onChangeTime = (evt) => {
       this.selectorTime = evt.target.value;
       this.renderTableCellsData();
-      this.renderMyCharts(Number(this.selectorTime), Number(this.selectorCalc), this.mod);
+      this.renderMyCharts(
+        Number(this.selectorTime),
+        Number(this.selectorCalc),
+        this.mod,
+        this.country,
+      );
     };
   }
 
@@ -100,6 +110,12 @@ export default class Table extends Charts {
     this.data = await this.fetchData();
     this.setRegionData();
     this.renderTable();
+    this.renderMyCharts(
+      Number(this.selectorTime),
+      Number(this.selectorCalc),
+      this.mod,
+      this.country,
+    );
   }
 
   setRegionData(region = null) {
