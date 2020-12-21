@@ -1,9 +1,15 @@
-export function createEl(parent, tag = 'div', className = '', idName = '', content= '') {
+export default function createEl(
+  parent,
+  tag = "div",
+  className = "",
+  idName = "",
+  content = ""
+) {
   const el = document.createElement(tag);
   el.className = className;
   el.id = idName;
   el.innerHTML = content;
-  if (parent) { 
+  if (parent) {
     parent.appendChild(el);
   }
   return el;

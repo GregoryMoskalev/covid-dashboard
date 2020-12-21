@@ -1,11 +1,11 @@
 import L from "leaflet";
-import { getData } from "./getData.js";
-import { createEl } from "./createEl.js";
+import getData from "./getData.js";
+import createEl from "./createEl.js";
 import refreshMap from "./refreshMap.js";
 import choiceMap from "./choiceMap.js";
 import imgUrl from "./img/fs.png";
 
-export async function mapModule(
+export default async function mapModule(
   parameter = ["Cases", "All", "Absolute"],
   mapEl = "map",
   isFullScreen = false
@@ -15,23 +15,7 @@ export async function mapModule(
   const mapContainer = document.querySelector("#map-container");
   const copyParameter = [...parameter];
   const mapSelector = createEl(mapContainer, "div", "", "map");
-  // const mapSelector = document.querySelector("#map");
-  // function choiceMap(condition, country) {
-  //   switch (condition) {
-  //     case "Last day cases":
-  //       return [
-  //         countryData[country].todayCases * 10,
-  //         countryData[country].todayCases,
-  //       ];
-  //     case "On 100 000 population":
-  //       return [
-  //         countryData[country].casesPerOneMillion,
-  //         countryData[country].casesPerOneMillion / 10,
-  //       ];
-  //     default:
-  //       return [countryData[country].cases / 20, countryData[country].cases];
-  //   }
-  // }
+
   const mapOptions = {
     center: [53.902284, 27.561831],
     zoom: 4,
@@ -65,7 +49,7 @@ export async function mapModule(
 
     circle.on("mouseover", () => {
       const popupLocation1 = new L.LatLng(lat, long);
-      const popupContent1 = `${country}: ${parameter} ${dataCircleValue[1]}`;
+      const popupContent1 = `${country}: ${dataCircleValue[2]} ${dataCircleValue[1]}`;
       const popup1 = new L.Popup();
       popup1.setLatLng(popupLocation1);
       popup1.setContent(popupContent1);
@@ -81,9 +65,6 @@ export async function mapModule(
   // TODO: Вместо console.log вставить ф-ию для передачи cтраны в др. блоки (if(countryOnClick) function())
   // Country on click
   map.on("click", async (e) => {
-    // const t = e.target;
-    // console.log(t)
-    // if (target.closest('.leaflet-control-container')) return;
     let coords = e.latlng.toString().slice(7, -1).split(" ");
     const [a, b] = coords;
     coords = `${b},${a.slice(0, -1)}`;
@@ -102,10 +83,6 @@ export async function mapModule(
     e.stopPropagation();
   }
   map.on("overlayadd", onOverlayAdd);
-  // map.addSource('countries', {
-  //   type: 'geojson',
-  //   data: 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_0_countries.geojson',
-  // });
 
   // Legend
   const legendMap = L.control({ position: "bottomleft" });
@@ -113,14 +90,6 @@ export async function mapModule(
   const typeInfo = L.control({ position: "bottomright" });
   const timeInfo = L.control({ position: "bottomright" });
   const valueInfo = L.control({ position: "bottomright" });
-  let legendSize;
-
-  // if (parameter === "Last day cases" || parameter === "On 100 000 population") {
-  //   legendSize = "For every 10 meters of radius there is 1 case.";
-  // }
-  // if (parameter === "Total cases") {
-  //   legendSize = "For every 1 meter of radius there is 20 case.";
-  // }
 
   typeInfo.onAdd = () => {
     const listInfo = L.DomUtil.create("select", "list-Info__type");
@@ -157,12 +126,13 @@ export async function mapModule(
   };
   onFullScreen.addTo(map);
 
+  const dataForLegend = choiceMap(parameter, 0, countryData);
   legendMap.onAdd = () => {
     const div = L.DomUtil.create("div", "legend");
     div.innerHTML += `<h3>Legend</h3>`;
-    div.innerHTML += `<h4>${parameter}</h4>`;
+    div.innerHTML += `<h4>${dataForLegend[2]}</h4>`;
     div.innerHTML += `<p>The radius of the circle depends on the number of cases.</p>`;
-    div.innerHTML += `<p>${legendSize}</p>`;
+    div.innerHTML += `<p>${dataForLegend[3]}</p>`;
     return div;
   };
   legendMap.addTo(map);
@@ -170,7 +140,7 @@ export async function mapModule(
   L.control.scale({ imperial: false }).addTo(map);
 
   // Block scroll multi map
-  const southWest = L.latLng(-90, -180);
+  const southWest = L.latLng(-80, -180);
   const northEast = L.latLng(90, 180);
   const bounds = L.latLngBounds(southWest, northEast);
 
@@ -199,7 +169,6 @@ export async function mapModule(
     });
     el.addEventListener("change", (e) => {
       const fullScreenParameter = mapSelector.classList.contains("active");
-      console.log(fullScreenParameter);
       copyParameter[numberParameter] = e.target.value;
       refreshMap(() => mapModule(copyParameter, "map", fullScreenParameter));
     });
@@ -208,7 +177,6 @@ export async function mapModule(
   changeConfig(".list-Info__time", 1);
   changeConfig(".list-Info__value", 2);
   for (let i = 0; i < parameter.length; i += 1) {
-    // console.log(parameter);
     const selectedElement = document.querySelector(`#${parameter[i]}`);
     selectedElement.setAttribute("selected", "selected");
   }
