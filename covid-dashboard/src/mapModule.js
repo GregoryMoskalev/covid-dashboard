@@ -61,8 +61,7 @@ export default async function mapModule(
       });
     });
   }
-
-  // TODO: Вместо console.log вставить ф-ию для передачи cтраны в др. блоки (if(countryOnClick) function())
+  
   // Country on click
   map.on("click", async (e) => {
     let coords = e.latlng.toString().slice(7, -1).split(" ");
@@ -72,11 +71,20 @@ export default async function mapModule(
     const clickData = await getData(
       `https://geocode-maps.yandex.ru/1.x/?apikey=40f6c358-457e-4cf2-bf12-4c022fbc83f6&geocode=${coords}&lang=en_US&format=json`
     );
+
     const countryOnClick =
       clickData?.response?.GeoObjectCollection?.featureMember[1]?.GeoObject
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
-    console.log(countryOnClick);
+
+    const event = new CustomEvent ( 'choiseCountry', {
+      detail: {
+        countryOnClick,
+      },
+      bubbles: true,
+      cancelable: false,
+    });
+    document.dispatchEvent(event);
   });
 
   function onOverlayAdd(e) {
