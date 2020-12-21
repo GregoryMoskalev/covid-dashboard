@@ -9,9 +9,12 @@ import {
 } from "./renderUI.js";
 import liveSearch from "./search.js";
 import { Keyboard } from "./keyboard.js";
-import getCountry from "./getCountry.js";
+import { getCountry, renderCountryInTable } from "./getCountry.js";
 
 function init() {
+  const tb = new Table();
+  tb.init();
+  renderCountryInTable(tb);
   renderUI();
   defineList();
   renderListCountries();
@@ -25,5 +28,4 @@ function init() {
 
 init();
 
-const tb = new Table();
-tb.init();
+

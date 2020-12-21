@@ -1,4 +1,4 @@
-const countryChoiсe = function (country) {
+export const countryChoiсe = function (country) {
   const event = new CustomEvent ( 'choiseCountry', {
     detail: {
       country,
@@ -8,7 +8,6 @@ const countryChoiсe = function (country) {
   });
   document.dispatchEvent(event);
   }
-
 function getCountryName(event) {
   const wr = event.target.closest(".country");
   const countryTitle = wr.querySelector(".country__title");
@@ -16,8 +15,13 @@ function getCountryName(event) {
   countryChoiсe(country);
   return country;
 }
-
-export default function getCountry() {
+export function getCountry() {
   const countryList = document.querySelector(".list__contries");
   countryList.addEventListener("click", (event) => getCountryName(event));
 }
+export function renderCountryInTable(table) {
+    document.addEventListener('choiseCountry',(e) => {
+    table.setRegionData(e.detail.country);
+  })
+}
+
