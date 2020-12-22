@@ -126,12 +126,6 @@ export default class Table extends Charts {
     this.renderTable();
     this.renderFullScreenBtn();
     this.handleFullScreenBtn();
-    this.renderMyCharts(
-      Number(this.selectorTime),
-      Number(this.selectorCalc),
-      this.mod,
-      this.country,
-    );
   }
 
   setRegionData(region = null) {
@@ -164,5 +158,11 @@ export default class Table extends Charts {
       this.renderTableHeading();
       this.renderTableCellsData();
     }
+    this.renderMyCharts(
+      Number(this.selectorTime),
+      Number(this.selectorCalc),
+      this.mod,
+      this.country,
+    );
   }
 }
