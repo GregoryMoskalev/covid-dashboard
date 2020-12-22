@@ -14,6 +14,9 @@ export default class Charts {
   }
 
   async renderMyCharts(time, rate, mod, country) {
+    if (this.country === country || !this.response) {
+      this.response = await this.fetchChartsData(country);
+    }
     this.country = country;
     this.ctx = [];
     [ this.chartParent ] = document.body.getElementsByClassName('chart-wrapper');
@@ -21,8 +24,6 @@ export default class Charts {
     while (this.chartParent.lastElementChild) {
       this.chartParent.removeChild(this.chartParent.lastElementChild);
     }
-
-    this.response = await this.fetchChartsData(country);
 
     this.myChart = newHtmlElement('div', 'chart');
     this.chartParent.appendChild(this.myChart);
