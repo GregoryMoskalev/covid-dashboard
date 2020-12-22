@@ -15,7 +15,7 @@
   .map-container {
     max-width: 600px;
     &.active {
-      max-width: 100%;;
+      max-width: 100%;
     }
   }
 }
@@ -24,7 +24,7 @@
   .map-container {
     max-width: 500px;
     &.active {
-      max-width: 100%;;
+      max-width: 100%;
     }
   }
 }
@@ -42,7 +42,7 @@
 
 .map {
   margin: auto;
-  width: 100%;
+  flex: 1;
   height: 97vh;
   border-radius: 15px;
   border: solid 1px black;
@@ -79,4 +79,3 @@
     transform: scale(1.1);
   }
 }
-

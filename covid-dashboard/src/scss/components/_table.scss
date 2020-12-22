@@ -1,14 +1,20 @@
 .table {
   position: relative;
   height: 15rem;
-  width: 30rem;
+  width: 40rem;
+  padding: .8rem;
   transition: .5s;
   background: $color-background;
 
+  &.full-screen {
+    padding: 0;
+    height: 98vh;
+  }
+
   &__heading {
+    margin: 1rem;
     font-weight: 300;
     text-transform: capitalize;
-    margin-bottom: 1rem;
     letter-spacing: 1px;
   }
 
@@ -16,12 +22,6 @@
     width: fit-content;
     height: fit-content;
     background: $color-background;
-
-    &.full-screen {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
   }
   border: 1px solid $color-grey-dark;
   border-radius: .5rem;
@@ -52,13 +52,11 @@
   border-radius: .5rem;
   padding: .5rem;
   color: $color-primary;
+
+  margin: 0 1rem;
+  cursor: pointer;
   & .option {
     color: $color-font;
     background: $color-background;
-  }
-
-  cursor: pointer;
-  &:not(:last-child) {
-    margin-right: 1rem;
   }
 }
