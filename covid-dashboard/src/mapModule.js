@@ -77,7 +77,7 @@ export default async function mapModule(
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
 
-    const event = new CustomEvent ( 'choiseCountry', {
+    const event = new CustomEvent ( 'choiseCountryInMap', {
       detail: {
         countryOnClick,
       },
