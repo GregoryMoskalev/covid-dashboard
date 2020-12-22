@@ -24,10 +24,10 @@ export default class Charts {
 
     this.response = await this.fetchChartsData(country);
 
-    this.cumulativeChart = newHtmlElement('div', 'chart');
-    this.chartParent.appendChild(this.cumulativeChart);
+    this.myChart = newHtmlElement('div', 'chart');
+    this.chartParent.appendChild(this.myChart);
     this.ctx = newHtmlElement('canvas');
-    this.cumulativeChart.appendChild(this.ctx);
+    this.myChart.appendChild(this.ctx);
 
     const data = {
       cases: Object.values(this.response.cases).map((el) => (!rate ? el : +(el / mod).toFixed(2))),
@@ -55,6 +55,8 @@ export default class Charts {
       rate,
       time,
     );
+    this.renderFullScreenBtnCharts();
+    this.handleFullScreenBtnCharts();
   }
 
   renderChart(data, label, rate, time) {
@@ -127,6 +129,19 @@ export default class Charts {
           ],
         },
       },
+    });
+  }
+
+  renderFullScreenBtnCharts() {
+    this.fullScreenBtnCharts = newHtmlElement('div', 'btn-full-screen');
+    this.fullScreenBtnCharts.classList.add('material-icons');
+
+    this.myChart.appendChild(this.fullScreenBtnCharts);
+  }
+
+  handleFullScreenBtnCharts() {
+    this.fullScreenBtnCharts.addEventListener('click', () => {
+      this.fullScreenBtnCharts.parentNode.classList.toggle('full-screen');
     });
   }
 }

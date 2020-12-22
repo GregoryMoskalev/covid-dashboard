@@ -56,9 +56,8 @@ export default class Table extends Charts {
   }
 
   renderFullScreenBtn() {
-    this.fullScreenBtn = newHtmlElement('span', 'btn-full-screen');
+    this.fullScreenBtn = newHtmlElement('div', 'btn-full-screen');
     this.fullScreenBtn.classList.add('material-icons');
-    this.fullScreenBtn.innerHTML = 'fullscreen';
 
     this.table.appendChild(this.fullScreenBtn);
   }

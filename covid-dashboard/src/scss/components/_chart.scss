@@ -2,10 +2,16 @@
   position: relative;
   width: 100%;
   height: 100%;
-
   border: 1px solid $color-grey-dark;
   border-radius: .5rem;
   padding: .8rem;
+  background: $color-background;
+
+  &.full-screen {
+    padding: 0;
+    height: 98vh;
+  }
+
   &-wrapper {
     width: 40rem;
     background: $color-background;
