@@ -1,5 +1,4 @@
 import L from "leaflet";
-import WorldData from 'geojson-world-map';
 import getData from "./getData.js";
 import createEl from "./createEl.js";
 import refreshMap from "./refreshMap.js";
@@ -10,13 +9,12 @@ export default async function mapModule(
   parameter = ["Cases", "All", "Absolute"],
   mapEl = "map",
   isFullScreen = false
-  ) {
-  console.log(WorldData);
+) {
   const url = `https://corona.lmao.ninja/v3/covid-19/countries`;
   const countryData = await getData(url);
   const mapContainer = document.querySelector("#map-container");
   const copyParameter = [...parameter];
-  const mapSelector = createEl(mapContainer, "div", "", "map");
+  const mapSelector = createEl(mapContainer, "div", "map", "map");
 
   const mapOptions = {
     center: [53.902284, 27.561831],
@@ -28,11 +26,15 @@ export default async function mapModule(
   };
 
   const map = new L.Map(mapEl, mapOptions);
-  const layer = L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=4912e309ed304c2588957687fac8f857', {
-    attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    apikey: '4912e309ed304c2588957687fac8f857',
-    maxZoom: 22
-  });
+  const layer = L.tileLayer(
+    "https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=4912e309ed304c2588957687fac8f857",
+    {
+      attribution:
+        '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      apikey: "4912e309ed304c2588957687fac8f857",
+      maxZoom: 22,
+    }
+  );
   map.addLayer(layer);
 
   // Dark theme - https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
@@ -65,7 +67,7 @@ export default async function mapModule(
       });
     });
   }
-  
+
   // Country on click
   map.on("click", async (e) => {
     let coords = e.latlng.toString().slice(7, -1).split(" ");
@@ -76,12 +78,18 @@ export default async function mapModule(
       `https://geocode-maps.yandex.ru/1.x/?apikey=40f6c358-457e-4cf2-bf12-4c022fbc83f6&geocode=${coords}&lang=en_US&format=json`
     );
 
-    const countryOnClick =
+    let countryOnClick =
       clickData?.response?.GeoObjectCollection?.featureMember[1]?.GeoObject
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
-        
-    const event = new CustomEvent ( 'choiseCountry', {
+    if (countryOnClick === "United Kingdom") {
+      countryOnClick = "UK";
+    }
+    if (countryOnClick === "Island of Ireland") {
+      countryOnClick = "Ireland";
+    }
+    console.log(countryOnClick);
+    const event = new CustomEvent("choiseCountryInMap", {
       detail: {
         countryOnClick,
       },
