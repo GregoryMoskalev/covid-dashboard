@@ -1,21 +1,25 @@
 #map {
-  // TODO Del width/height
-  width: 800px;
-  height: 600px;
-
   margin: auto;
-  min-height: 320px;
-  min-width: 460px;
-  border-radius: 15px;
+  border-radius: 8px;
   border: solid 1px black;
   transition: 0.2s;
+  height: 98vh;
   &.active {
-    top: 0;
+    width: 98%;
+    height: 98vh;
+  }
+}
+
+.map-container {
+  // max-width: 1000px;
+  flex-grow: 1;
+  &.active {
+    top: 1rem;
     left: 0;
     position: absolute;
     z-index: 10;
-    width: 98%;
-    height: 95vh;
+    width: 100%;
+
   }
 }
 

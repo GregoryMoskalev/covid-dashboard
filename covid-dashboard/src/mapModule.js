@@ -1,4 +1,5 @@
 import L from "leaflet";
+import WorldData from 'geojson-world-map';
 import getData from "./getData.js";
 import createEl from "./createEl.js";
 import refreshMap from "./refreshMap.js";
@@ -9,7 +10,8 @@ export default async function mapModule(
   parameter = ["Cases", "All", "Absolute"],
   mapEl = "map",
   isFullScreen = false
-) {
+  ) {
+  console.log(WorldData);
   const url = `https://corona.lmao.ninja/v3/covid-19/countries`;
   const countryData = await getData(url);
   const mapContainer = document.querySelector("#map-container");
@@ -26,9 +28,11 @@ export default async function mapModule(
   };
 
   const map = new L.Map(mapEl, mapOptions);
-  const layer = new L.TileLayer(
-    "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
-  );
+  const layer = L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=4912e309ed304c2588957687fac8f857', {
+    attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    apikey: '4912e309ed304c2588957687fac8f857',
+    maxZoom: 22
+  });
   map.addLayer(layer);
 
   // Dark theme - https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
@@ -76,7 +80,7 @@ export default async function mapModule(
       clickData?.response?.GeoObjectCollection?.featureMember[1]?.GeoObject
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
-
+        
     const event = new CustomEvent ( 'choiseCountry', {
       detail: {
         countryOnClick,
@@ -165,6 +169,7 @@ export default async function mapModule(
   const onFullScreenBtn = document.querySelector(".img-full-screen");
   onFullScreenBtn.addEventListener("click", (e) => {
     e.stopPropagation();
+    mapContainer.classList.toggle("active");
     mapSelector.classList.toggle("active");
     setTimeout(() => map.invalidateSize(), 200);
   });
