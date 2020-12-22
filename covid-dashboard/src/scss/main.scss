@@ -1,6 +1,37 @@
-@import 'base/variables';
-@import 'base/base';
-@import "components/keyboard";
-@import 'components/table';
-@import 'components/chart';
+@import "./components/mapModule";
 @import "components/list";
+@import "components/keyboard";
+@import "base/variables";
+@import "base/base";
+@import "components/table";
+
+.hide {
+  display: none;
+}
+
+.full-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 97vh;
+  z-index: 10000;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 1020px) {
+  .container {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-self: center;
+  }
+}
