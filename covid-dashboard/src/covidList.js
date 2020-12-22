@@ -1,6 +1,6 @@
 import getCovidCounty from "./dataFetch.js";
 
-export const dataListCovid = async function () {
+export  async function dataListCovid() {
   const item = [];
   const rate = 100000;
   item.length = 0;

@@ -1,3 +1,4 @@
+@import './components/mapModule';
 @import "components/list";
 @import "components/keyboard";
 @import 'base/variables';
@@ -9,10 +10,17 @@
 }
 
 .full-screen {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: calc(100vw - (100vw - 100%));
     height: 100vh;
-    z-index: 100;
+    z-index: 10000;
 }
 
+.container {
+display: flex;
+position: relative;
+justify-content: space-between;
+align-items: center;
+}

@@ -1,6 +1,6 @@
 import "./scss/main.scss";
 import Table from "./table.js";
-
+import mapModule from './mapModule.js';
 import {
   renderUI,
   defineList,
@@ -9,23 +9,24 @@ import {
 } from "./renderUI.js";
 import liveSearch from "./search.js";
 import { Keyboard } from "./keyboard.js";
-import { getCountry, renderCountryInTable } from "./getCountry.js";
+import { getCountry, renderCountryInTable, mapInTable } from "./getCountry.js";
 
 function init() {
   const tb = new Table();
   tb.init();
   renderCountryInTable(tb);
+  mapInTable(tb);
   renderUI();
   defineList();
   renderListCountries();
   liveSearch();
   handleFullScreen();
   getCountry();
-  window.addEventListener("DOMContentLoaded", function () {
+  window.addEventListener("DOMContentLoaded",  () => {
     Keyboard.init();
   });
 }
 
 init();
-
+mapModule();
 
