@@ -38,11 +38,11 @@ export default class Charts {
     };
 
     this.cumulativeData = [
-      [ 'Cumulative Cases', 'Cumulative Deaths', 'Cumulative Recovered' ],
+      [ 'Cases', 'Deaths', 'Recovered' ],
       [ data.cases, data.deaths, data.recovered ],
     ];
     this.dailyData = [
-      [ 'Daily Cases', 'Daily Deaths', 'Daily Recovered' ],
+      [ 'Cases', 'Deaths', 'Recovered' ],
       [
         dailyFromCumulative(data.cases),
         dailyFromCumulative(data.deaths),
@@ -101,8 +101,8 @@ export default class Charts {
         title: {
           display: true,
           text: `${!this.country ? 'Global' : this.country}, ${!rate ? '' : 'Per 100k, '}${!time
-            ? 'All Time'
-            : 'Last Day'}`,
+            ? 'Cumulative'
+            : 'Daily'}`,
         },
         tooltips: {
           callbacks: {
