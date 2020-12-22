@@ -82,12 +82,23 @@ export default async function mapModule(
       clickData?.response?.GeoObjectCollection?.featureMember[1]?.GeoObject
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
+
     if (countryOnClick === "United Kingdom") {
       countryOnClick = "UK";
     }
     if (countryOnClick === "Island of Ireland") {
       countryOnClick = "Ireland";
     }
+    if (countryOnClick === "United States of America") {
+      countryOnClick = "USA";
+    }
+    if (countryOnClick === "Democratic Republic of the Congo") {
+      countryOnClick = "Congo";
+    }
+    if (countryOnClick === "New Guinea Island" || countryOnClick === "Borneo Island") {
+      countryOnClick = "Indonesia";
+    }
+
     console.log(countryOnClick);
     const event = new CustomEvent("choiseCountryInMap", {
       detail: {
@@ -171,7 +182,7 @@ export default async function mapModule(
 
   if (isFullScreen) {
     mapSelector.classList.add("active");
-    setTimeout(() => map.invalidateSize(), 200);
+    setTimeout(() => map.invalidateSize(), 300);
   }
   // Full screen button
   const onFullScreenBtn = document.querySelector(".img-full-screen");
@@ -179,7 +190,7 @@ export default async function mapModule(
     e.stopPropagation();
     mapContainer.classList.toggle("active");
     mapSelector.classList.toggle("active");
-    setTimeout(() => map.invalidateSize(), 200);
+    setTimeout(() => map.invalidateSize(), 300);
   });
 
   // List info control
