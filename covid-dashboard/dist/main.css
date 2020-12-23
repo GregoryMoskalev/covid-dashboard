@@ -308,6 +308,9 @@ footer {
   position: absolute;
   bottom: 0;
   right: 0; }
+  @media screen and (max-width: 1020px) {
+    footer {
+      position: inherit; } }
 
 .btn-full-screen {
   width: 20px;
@@ -398,7 +401,8 @@ footer {
   .container {
     flex-wrap: wrap;
     justify-content: center;
-    align-self: center; } }
+    align-self: center;
+    height: 100%; } }
 
 .wrap-data-chart {
   display: flex;

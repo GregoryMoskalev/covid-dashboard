@@ -1,5 +1,5 @@
 import './scss/main.scss';
-import Table from './Table.js';
+import Table from './table.js';
 import mapModule from './mapModule.js';
 import { renderUI, defineList, renderListCountries, handleFullScreen } from './renderUI.js';
 import liveSearch from './search.js';
