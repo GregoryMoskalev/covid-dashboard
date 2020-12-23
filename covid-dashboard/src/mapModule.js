@@ -99,7 +99,6 @@ export default async function mapModule(
       countryOnClick = "Indonesia";
     }
 
-    console.log(countryOnClick);
     const event = new CustomEvent("choiseCountryInMap", {
       detail: {
         countryOnClick,
