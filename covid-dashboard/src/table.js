@@ -1,8 +1,10 @@
-/* eslint-disable no-console */
 import fetchData from './fetchData.js';
+import Charts from './Charts.js';
+import { newHtmlElement } from './utilities.js';
 
-export default class Table {
+export default class Table extends Charts {
   constructor() {
+    super();
     [ this.tableParent ] = document.body.getElementsByClassName('table-wrapper');
     this.cellsData = [];
     this.fetchData = fetchData;
@@ -10,15 +12,6 @@ export default class Table {
     this.selectorCalc = 0;
     this.rate = 100000;
     this.cellsHeaders = [ 'Cases', 'Deaths', 'Recovered' ];
-
-    this.newHtmlElement = (tag, className, iHtml = null) => {
-      const element = document.createElement(tag);
-      element.classList.add(className);
-      if (iHtml) {
-        element.innerHTML = iHtml;
-      }
-      return element;
-    };
 
     this.onChangeCalc = (evt) => {
       this.selectorCalc = evt.target.value;
@@ -34,7 +27,7 @@ export default class Table {
   renderTable() {
     this.tableCell = [];
 
-    this.table = this.newHtmlElement('div', 'table');
+    this.table = newHtmlElement('div', 'table');
     this.tableParent.appendChild(this.table);
 
     this.renderTableHeading();
@@ -42,7 +35,7 @@ export default class Table {
     this.table.appendChild(this.renderControl([ 'Total', 'Per 100000 people' ], this.onChangeCalc));
     this.table.appendChild(this.renderControl([ 'All Time', 'Last day' ], this.onChangeTime));
 
-    this.tableRow = this.newHtmlElement('div', 'table__row');
+    this.tableRow = newHtmlElement('div', 'table__row');
     this.table.appendChild(this.tableRow);
 
     this.renderTableCells();
@@ -50,9 +43,22 @@ export default class Table {
     this.renderTableCellsData();
   }
 
+  renderFullScreenBtn() {
+    this.fullScreenBtn = newHtmlElement('div', 'btn-full-screen');
+    this.fullScreenBtn.classList.add('material-icons');
+
+    this.table.appendChild(this.fullScreenBtn);
+  }
+
+  handleFullScreenBtn() {
+    this.fullScreenBtn.addEventListener('click', () => {
+      this.fullScreenBtn.parentNode.classList.toggle('full-screen');
+    });
+  }
+
   renderTableHeading() {
     if (!this.tableHeading) {
-      this.tableHeading = this.newHtmlElement('h3', 'table__heading');
+      this.tableHeading = newHtmlElement('h3', 'table__heading');
       this.table.appendChild(this.tableHeading);
     }
     this.tableHeading.innerHTML = !this.country ? 'global' : this.country;
@@ -62,10 +68,10 @@ export default class Table {
     if (!this.select) {
       this.select = [];
     }
-    this.select.push(this.newHtmlElement('select', 'selector'));
+    this.select.push(newHtmlElement('select', 'selector'));
 
     options.forEach((option, index) => {
-      const op = this.newHtmlElement('option', 'option', option);
+      const op = newHtmlElement('option', 'option', option);
       op.value = index;
       this.select[this.select.length - 1].appendChild(op);
     });
@@ -76,7 +82,7 @@ export default class Table {
 
   renderTableCells() {
     this.cells[this.selectorTime].forEach((_, index) => {
-      this.tableCell[index] = this.newHtmlElement('div', 'table__cell');
+      this.tableCell[index] = newHtmlElement('div', 'table__cell');
       this.tableRow.appendChild(this.tableCell[index]);
     });
   }
@@ -85,7 +91,7 @@ export default class Table {
     this.cells[this.selectorTime].forEach((_, index) => {
       this.tableCell[index].innerHTML = `
       <h3 class="cell-heading">${this.cellsHeaders[index]}</h3>`;
-      this.cellsData[index] = this.newHtmlElement('span', 'table__data');
+      this.cellsData[index] = newHtmlElement('span', 'table__data');
       this.tableCell[index].appendChild(this.cellsData[index]);
     });
   }
@@ -105,6 +111,8 @@ export default class Table {
     this.data = await this.fetchData();
     this.setRegionData();
     this.renderTable();
+    this.renderFullScreenBtn();
+    this.handleFullScreenBtn();
   }
 
   setRegionData(region = null) {
@@ -137,5 +145,11 @@ export default class Table {
       this.renderTableHeading();
       this.renderTableCellsData();
     }
+    this.renderMyCharts(
+      Number(this.selectorTime),
+      Number(this.selectorCalc),
+      this.mod,
+      this.country,
+    );
   }
 }

@@ -84,7 +84,7 @@ export default async function mapModule(
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
     countryOnClick = correctCountryName(countryOnClick);
-    console.log(countryOnClick)
+
     const event = new CustomEvent("choiseCountryInMap", {
       detail: {
         countryOnClick,
