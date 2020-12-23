@@ -103,9 +103,9 @@ export default async function mapModule(
   // Legend
   const legendMap = L.control({ position: "bottomleft" });
   const onFullScreen = L.control({ position: "topright" });
-  const typeInfo = L.control({ position: "bottomright" });
-  const timeInfo = L.control({ position: "bottomright" });
-  const valueInfo = L.control({ position: "bottomright" });
+  const typeInfo = L.control({ position: "topleft" });
+  const timeInfo = L.control({ position: "topleft" });
+  const valueInfo = L.control({ position: "topleft" });
 
   typeInfo.onAdd = () => {
     const listInfo = L.DomUtil.create("select", "list-Info__type");
@@ -177,7 +177,7 @@ export default async function mapModule(
     mapSelector.classList.toggle("active");
     setTimeout(() => map.invalidateSize(), 300);
   });
-
+  map.on('resize', setTimeout(() => map.invalidateSize(), 500));
   // List info control
   function changeConfig(selector, numberParameter) {
     const el = document.querySelector(selector);
