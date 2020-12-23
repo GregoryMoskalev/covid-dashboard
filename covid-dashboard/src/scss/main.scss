@@ -5,6 +5,7 @@
 @import "base/variables";
 @import "base/base";
 @import "components/table";
+@import "components/recommendation";
 
 .hide {
   display: none;
@@ -43,6 +44,3 @@
   flex-direction: column;
 }
 
-#Layer_1 {
-  height: 1.6rem;
-}

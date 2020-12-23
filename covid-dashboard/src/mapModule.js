@@ -4,6 +4,7 @@ import createEl from "./createEl.js";
 import refreshMap from "./refreshMap.js";
 import choiceMap from "./choiceMap.js";
 import imgUrl from "./img/fs.png";
+import correctCountryName from './correctCountryName.js';
 
 export default async function mapModule(
   parameter = ["Cases", "All", "Absolute"],
@@ -82,22 +83,7 @@ export default async function mapModule(
       clickData?.response?.GeoObjectCollection?.featureMember[1]?.GeoObject
         ?.metaDataProperty?.GeocoderMetaData?.AddressDetails?.Country
         ?.CountryName;
-
-    if (countryOnClick === "United Kingdom") {
-      countryOnClick = "UK";
-    }
-    if (countryOnClick === "Island of Ireland") {
-      countryOnClick = "Ireland";
-    }
-    if (countryOnClick === "United States of America") {
-      countryOnClick = "USA";
-    }
-    if (countryOnClick === "Democratic Republic of the Congo") {
-      countryOnClick = "Congo";
-    }
-    if (countryOnClick === "New Guinea Island" || countryOnClick === "Borneo Island") {
-      countryOnClick = "Indonesia";
-    }
+    countryOnClick = correctCountryName(countryOnClick);
 
     const event = new CustomEvent("choiseCountryInMap", {
       detail: {
@@ -117,9 +103,9 @@ export default async function mapModule(
   // Legend
   const legendMap = L.control({ position: "bottomleft" });
   const onFullScreen = L.control({ position: "topright" });
-  const typeInfo = L.control({ position: "bottomright" });
-  const timeInfo = L.control({ position: "bottomright" });
-  const valueInfo = L.control({ position: "bottomright" });
+  const typeInfo = L.control({ position: "topleft" });
+  const timeInfo = L.control({ position: "topleft" });
+  const valueInfo = L.control({ position: "topleft" });
 
   typeInfo.onAdd = () => {
     const listInfo = L.DomUtil.create("select", "list-Info__type");
@@ -191,7 +177,7 @@ export default async function mapModule(
     mapSelector.classList.toggle("active");
     setTimeout(() => map.invalidateSize(), 300);
   });
-
+  map.on('resize', setTimeout(() => map.invalidateSize(), 500));
   // List info control
   function changeConfig(selector, numberParameter) {
     const el = document.querySelector(selector);

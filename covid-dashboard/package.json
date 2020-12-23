@@ -39,6 +39,5 @@
     "chart.js": "^2.9.4",
     "geojson-world-map": "0.0.2",
     "leaflet": "^1.7.1"
-
   }
 }
