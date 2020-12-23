@@ -281,7 +281,7 @@
   background: #fff; }
   .chart.full-screen {
     padding: 0;
-    height: 98vh; }
+    height: 100vh; }
   .chart-wrapper {
     width: 40rem;
     background: #fff; }
@@ -302,6 +302,12 @@ body {
   font-size: 1.6rem;
   display: flex;
   flex-wrap: wrap; }
+
+footer {
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0; }
 
 .btn-full-screen {
   width: 20px;
@@ -324,13 +330,15 @@ body {
   height: 15rem;
   width: 40rem;
   padding: .8rem;
+  margin-bottom: 1rem;
   transition: .2s;
   background: #fff;
   border: 1px solid #777;
   border-radius: .5rem; }
   .table.full-screen {
     padding: 0;
-    height: 98vh; }
+    height: 98vh;
+    margin-bottom: 0; }
   .table__heading {
     margin: 1rem;
     font-weight: 300;
@@ -395,4 +403,7 @@ body {
 .wrap-data-chart {
   display: flex;
   flex-direction: column; }
+
+#Layer_1 {
+  height: 1.6rem; }
 
