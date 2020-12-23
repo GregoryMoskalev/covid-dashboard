@@ -29,4 +29,3 @@ function init() {
 
 init();
 mapModule();
-
