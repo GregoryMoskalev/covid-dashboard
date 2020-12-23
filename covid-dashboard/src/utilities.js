@@ -42,9 +42,9 @@ function dailyFromCumulative(dataArr) {
   return arr.map((n, i) => {
     if (i > 0) {
       const daily = n - arr[i - 1];
-      return daily > 0 ? daily.toFixed(2) : 0;
+      return daily > 0 ? Number(daily.toFixed(2)) : 0;
     }
-    return null;
+    return n;
   });
 }
 
