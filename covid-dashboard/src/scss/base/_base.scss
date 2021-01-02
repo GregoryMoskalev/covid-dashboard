@@ -1,0 +1,45 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+}
+
+body {
+  background-color: $color-background;
+  color: $color-font;
+  font-size: 1.6rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+footer {
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.btn-full-screen {
+  width: 20px;
+  height: 20px;
+  background-image: url(https://img.icons8.com/fluent-systems-filled/20/cbddf8/full-screen.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  display: block;
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1400px) {
+  body {
+    font-size: 1.4rem;
+  }
+}
